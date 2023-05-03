@@ -10,9 +10,6 @@ export const celularSchema = {
         ip:{
             type:'string',
         },
-        id_ubicacion:{
-            type:'string'
-        }
     },
-    required:['numero_celular','imsi','ip','id_ubicacion']
+    required:['numero_celular','imsi','ip']
 }

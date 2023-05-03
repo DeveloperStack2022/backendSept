@@ -16,11 +16,12 @@ export class SignUpController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const { name, email, password } = request
+      const { name, email, password,role } = request
       const isValid = await this.addAccount.add({
         name,
         email,
-        password
+        password,
+        role
       })
       if (!isValid) {
         return forbidden(new EmailInUseError())
@@ -42,5 +43,6 @@ export namespace SignUpController {
     email: string
     password: string
     passwordConfirmation: string
+    role:string;
   }
 }

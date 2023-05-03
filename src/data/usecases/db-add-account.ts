@@ -13,6 +13,7 @@ export class DbAddAccount implements AddAccount {
     let isValid = false
     if (!exists) {
       const hashedPassword = await this.hasher.hash(accountData.password)
+      console.log(accountData)
       isValid = await this.addAccountRepository.add({ ...accountData, password: hashedPassword })
     }
     return isValid
