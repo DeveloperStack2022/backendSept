@@ -7,5 +7,8 @@ export * from './login-controller-factory'
 export * from './save-survey-result-controller-factory'
 export * from './signup-controller-factory'
 export * from './signup-validation-factory'
+
+// Solicitudes
 export * from './add-solicitud-controller-factory'
 export * from './add-solicitud-validation-factory'
+export * from './load-solicitudes-controller-factory'
