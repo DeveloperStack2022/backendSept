@@ -6,5 +6,5 @@ import {Router} from 'express'
 
 export default (router: Router ):void => {
     router.post('/solicitud',auth,adaptRoute(makeAddSolicitudController()))
-    router.get('/solicitudes',auth,adaptRoute(makeLoadSolicitudesController()))
+    router.get('/solicitud',auth,adaptRoute(makeLoadSolicitudesController()))
 }

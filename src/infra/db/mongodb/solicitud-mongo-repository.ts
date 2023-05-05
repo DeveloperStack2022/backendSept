@@ -67,12 +67,21 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
         const query = new QueryBuilder()
             .lookup({
                 from: 'solicitantes',
-                foreignField: 'solicitante',
-                localField:'_id',
+                foreignField: '_id',
+                localField:'solicitante',
                 as:'solicitante_result'
             })
+            .unwind({path:'$solicitante_result'})
+            .lookup({
+                from: 'celulares',
+                foreignField: '_id',
+                localField:'celular',
+                as:'celulares_solicitados'
+            })
             .build()
+            
         const solicitudes = await solicitudCollection.aggregate(query).toArray()
+        
         return MongoHelper.mapCollection(solicitudes)
     }
 }

@@ -13,7 +13,8 @@ import {
   addSolicitudParamsSchema,
   solicitanteSchema,
   celularSchema,
-  ubicacionSchema
+  ubicacionSchema,
+  solicitudSchema
 } from './schemas/'
 
 export default {
@@ -31,5 +32,6 @@ export default {
   addSolicitudParamsSchema:addSolicitudParamsSchema,
   solicitante:solicitanteSchema,
   celular:celularSchema,
-  ubicacion:ubicacionSchema
+  ubicacion:ubicacionSchema,
+  solicitud:solicitudSchema
 }
