@@ -9,3 +9,4 @@ export * from './load-survey-result'
 export * from './save-survey-result'
 // Solicitud
 export * from './add-solicitud'
+export * from './load-solicitudes'

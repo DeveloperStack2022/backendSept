@@ -4,4 +4,5 @@ export * from './mongo-helper'
 export * from './query-builder'
 export * from './survey-mongo-repository'
 export * from './survey-result-mongo-repository'
+// Solicitud
 export * from './solicitud-mongo-repository'

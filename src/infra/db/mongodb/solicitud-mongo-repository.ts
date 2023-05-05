@@ -1,13 +1,12 @@
-import {MongoHelper} from '@/infra/db'
-import {AddSolicitudRepository} from '@/data/protocols/db'
+import {MongoHelper, QueryBuilder} from '@/infra/db'
+import {AddSolicitudRepository,LoadSolicitudesRepository} from '@/data/protocols/db'
 import {ObjectId} from 'mongodb'
 import { AddSolicitud } from '@/domain/usecases'
 
-export class SolicitudMongoRepository implements AddSolicitudRepository {
+export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository {
     
     async add(data: AddSolicitud.Params):Promise<void> {
         const solicitudCollection = MongoHelper.getCollection('solicitud');
-
         const celularCollection = MongoHelper.getCollection('celulares');
         const solicitanteCollection = MongoHelper.getCollection('solicitantes')
         const ubicacionCollection = MongoHelper.getCollection('ubicacion')
@@ -61,5 +60,19 @@ export class SolicitudMongoRepository implements AddSolicitudRepository {
         }
         
         
+    }
+
+    async loadAll(accountId: string):Promise<LoadSolicitudesRepository.Result> {
+        const solicitudCollection = MongoHelper.getCollection('solicitud');
+        const query = new QueryBuilder()
+            .lookup({
+                from: 'solicitantes',
+                foreignField: 'solicitante',
+                localField:'_id',
+                as:'solicitante_result'
+            })
+            .build()
+        const solicitudes = await solicitudCollection.aggregate(query).toArray()
+        return MongoHelper.mapCollection(solicitudes)
     }
 }

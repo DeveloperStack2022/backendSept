@@ -5,11 +5,13 @@ import { ObjectId } from 'mongodb'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository, CheckSurveyByIdRepository, LoadAnswersBySurveyRepository {
   async add (data: AddSurveyRepository.Params): Promise<void> {
+    // console.log(data)
     const surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.insertOne(data)
   }
 
   async loadAll (accountId: string): Promise<LoadSurveysRepository.Result> {
+
     const surveyCollection = MongoHelper.getCollection('surveys')
     const query = new QueryBuilder()
       .lookup({

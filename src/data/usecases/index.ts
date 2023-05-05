@@ -7,4 +7,6 @@ export * from './db-check-survey-by-id'
 export * from './db-load-survey-result'
 export * from './db-load-surveys'
 export * from './db-save-survey-result'
+// Solicitudes 
 export * from './db-add-solicitud'
+export * from './db-load-solicitudes'
