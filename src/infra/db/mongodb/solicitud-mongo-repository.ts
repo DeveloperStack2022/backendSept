@@ -65,6 +65,9 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
     async loadAll(accountId: string):Promise<LoadSolicitudesRepository.Result> {
         const solicitudCollection = MongoHelper.getCollection('solicitud');
         const query = new QueryBuilder()
+            .match({
+                "accountId": accountId
+            })
             .lookup({
                 from: 'solicitantes',
                 foreignField: '_id',
@@ -81,7 +84,6 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
             .build()
             
         const solicitudes = await solicitudCollection.aggregate(query).toArray()
-        
         return MongoHelper.mapCollection(solicitudes)
     }
 }
