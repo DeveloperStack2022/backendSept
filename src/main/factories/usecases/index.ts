@@ -7,6 +7,8 @@ export * from './check-survey-by-id-factory'
 export * from './load-surveys-factory'
 export * from './load-survey-result-factory'
 export * from './save-survey-result-factory'
-// Solicitudes 
+// Solicitudes
 export * from './add-solicitud-factory'
 export * from './load-solicitudes-factory'
+export * from './check-solicitud-by-id-factory'
+export * from './load-solicitud-result-factory'

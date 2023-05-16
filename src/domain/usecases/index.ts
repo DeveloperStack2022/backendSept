@@ -10,3 +10,6 @@ export * from './save-survey-result'
 // Solicitud
 export * from './add-solicitud'
 export * from './load-solicitudes'
+export * from './load-by-id-solicitud'
+export * from './check-solicitud-by-id'
+export * from './load-solicitud-result'

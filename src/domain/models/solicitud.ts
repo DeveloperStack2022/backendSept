@@ -3,8 +3,8 @@ export type SolicitudModel = {
   hora: string
   fecha: Date
   plataforma: string
-  investigacion_previa:string; //Ip
-  delito?:string;
+  investigacion_previa: string // Ip
+  delito?: string
   caso?: string
   evento?: string
   organizacion_delicuencial?: string
