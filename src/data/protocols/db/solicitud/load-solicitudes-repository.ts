@@ -1,9 +1,9 @@
-import {SolicitudModel} from '@/domain/models'
+import { SolicitudModel } from '@/domain/models'
 
 export interface LoadSolicitudesRepository {
-    loadAll: (accountId: string) => Promise<LoadSolicitudesRepository.Result>
+  loadAll: (accountId: string) => Promise<LoadSolicitudesRepository.Result>
 }
 
 export namespace LoadSolicitudesRepository {
-    export type Result = SolicitudModel[]
+  export type Result = SolicitudModel[]
 }

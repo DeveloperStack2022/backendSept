@@ -11,7 +11,6 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
   }
 
   async loadAll (accountId: string): Promise<LoadSurveysRepository.Result> {
-
     const surveyCollection = MongoHelper.getCollection('surveys')
     const query = new QueryBuilder()
       .lookup({

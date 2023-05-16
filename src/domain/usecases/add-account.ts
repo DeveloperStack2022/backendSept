@@ -6,8 +6,8 @@ export namespace AddAccount {
   export type Params = {
     name: string
     email: string
-    password: string;
-    role:string;
+    password: string
+    role: string
   }
 
   export type Result = boolean

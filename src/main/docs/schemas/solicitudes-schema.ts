@@ -1,6 +1,6 @@
 export const solicitudesSchema = {
-    type: 'array',
-    items: {
-        $ref: '#/schemas/solicitud'
-    }
+  type: 'array',
+  items: {
+    $ref: '#/schemas/solicitud'
+  }
 }

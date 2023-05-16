@@ -29,9 +29,9 @@ export default {
   saveSurveyParams: saveSurveyParamsSchema,
   surveyResult: surveyResultSchema,
   surveyResultAnswer: surveyResultAnswerSchema,
-  addSolicitudParamsSchema:addSolicitudParamsSchema,
-  solicitante:solicitanteSchema,
-  celular:celularSchema,
-  ubicacion:ubicacionSchema,
-  solicitud:solicitudSchema
+  addSolicitudParamsSchema: addSolicitudParamsSchema,
+  solicitante: solicitanteSchema,
+  celular: celularSchema,
+  ubicacion: ubicacionSchema,
+  solicitud: solicitudSchema
 }

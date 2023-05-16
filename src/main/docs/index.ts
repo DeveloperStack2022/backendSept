@@ -6,7 +6,7 @@ export default {
   openapi: '3.0.0',
   info: {
     title: 'Clean Architecture By.Luis Zapata',
-    version: '1.0.0',
+    version: '1.0.0'
   },
   servers: [{
     url: '/api',

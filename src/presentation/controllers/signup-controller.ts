@@ -43,6 +43,6 @@ export namespace SignUpController {
     email: string
     password: string
     passwordConfirmation: string
-    role:string;
+    role: string
   }
 }
