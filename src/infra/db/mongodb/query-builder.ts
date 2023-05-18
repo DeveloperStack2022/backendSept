@@ -8,6 +8,13 @@ export class QueryBuilder {
     return this
   }
 
+  private addStepOther(step:string,data:number): QueryBuilder {
+    this.query.push({
+      [step]:data
+    })
+    return this
+  }
+
   match (data: object): QueryBuilder {
     return this.addStep('$match', data)
   }
@@ -31,7 +38,12 @@ export class QueryBuilder {
   project (data: object): QueryBuilder {
     return this.addStep('$project', data)
   }
-
+  skip(data:number): QueryBuilder {
+    return  this.addStepOther('$skip',data as number)
+  }
+  limit(data:number):QueryBuilder {
+    return this.addStepOther('$limit',data as number)
+  }
   build (): object[] {
     return this.query
   }

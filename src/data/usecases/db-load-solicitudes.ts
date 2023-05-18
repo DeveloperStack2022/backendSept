@@ -4,7 +4,7 @@ import { LoadSolicitudesRepository } from '@/data/protocols'
 export class DbLoadSolicitudes implements LoadSolicitudes {
   constructor (private readonly loadSolicitudesRepository: LoadSolicitudesRepository) {}
 
-  async load (accountId: string): Promise<LoadSolicitudes.Result> {
-    return this.loadSolicitudesRepository.loadAll(accountId)
+  async load (accountId: string,limit:number,skip:number): Promise<LoadSolicitudes.Result> {
+    return this.loadSolicitudesRepository.loadAll(accountId,limit,skip)
   }
 }

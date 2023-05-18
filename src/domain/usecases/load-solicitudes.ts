@@ -1,7 +1,7 @@
 import { SolicitudModel } from '@/domain/models'
 
 export interface LoadSolicitudes {
-  load: (accountId: string) => Promise<LoadSolicitudes.Result>
+  load: (accountId: string,skip:number,limit:number) => Promise<LoadSolicitudes.Result>
 }
 
 export namespace LoadSolicitudes {

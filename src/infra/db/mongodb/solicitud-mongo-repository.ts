@@ -59,8 +59,9 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
     }
   }
 
-  async loadAll (accountId: string): Promise<LoadSolicitudesRepository.Result> {
-    const solicitudCollection = MongoHelper.getCollection('solicitud')
+ async loadAll(accountId: string, skip: number, limit: number):Promise<LoadSolicitudesRepository.Result> {
+  // trasnform to number 
+  const solicitudCollection = MongoHelper.getCollection('solicitud')
     const query = new QueryBuilder()
       .match({
         accountId: accountId
@@ -78,11 +79,13 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
         localField: 'celular',
         as: 'celulares_solicitados'
       })
+      .skip(skip)
+      .limit(limit)
       .build()
-
+    console.log(query)
     const solicitudes = await solicitudCollection.aggregate(query).toArray()
     return MongoHelper.mapCollection(solicitudes)
-  }
+ }
 
   async loadById (idSolicitud: string): Promise<SolicitudModel> {
     const solicitudCollection = MongoHelper.getCollection('solicitud')
