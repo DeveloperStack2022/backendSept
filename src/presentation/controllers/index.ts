@@ -7,3 +7,6 @@ export * from './signup-controller'
 // Solicitud
 export * from './add-solicitud-controller'
 export * from './load-solicitud-result-controller'
+
+// Solicitud Test 
+export * from './solicitud-test'

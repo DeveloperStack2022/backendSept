@@ -13,3 +13,6 @@ export * from './add-solicitud-controller-factory'
 export * from './add-solicitud-validation-factory'
 export * from './load-solicitudes-controller-factory'
 export * from './load-solicitud-result-controller-factory'
+
+// solicitud Test 
+export * from './solicitud_test'

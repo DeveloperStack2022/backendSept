@@ -88,6 +88,7 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
  }
 
   async loadById (idSolicitud: string): Promise<SolicitudModel> {
+    
     const solicitudCollection = MongoHelper.getCollection('solicitud')
     const query = new QueryBuilder()
       .match({
@@ -119,6 +120,7 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
 
   async checkById (id: string): Promise<boolean> {
     const solicitudCollection = MongoHelper.getCollection('solicitud')
+   
     const solicitud = await solicitudCollection.findOne({
       _id: new ObjectId(id)
     },{

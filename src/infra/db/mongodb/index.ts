@@ -6,3 +6,6 @@ export * from './survey-mongo-repository'
 export * from './survey-result-mongo-repository'
 // Solicitud
 export * from './solicitud-mongo-repository'
+
+// solicitud Test 
+export * from './solicitud_test-mongo-repository'

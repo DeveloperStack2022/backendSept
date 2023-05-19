@@ -13,3 +13,6 @@ export * from './load-solicitudes'
 export * from './load-by-id-solicitud'
 export * from './check-solicitud-by-id'
 export * from './load-solicitud-result'
+
+// Solicitud Test 
+export * from './solicitudes_test'
