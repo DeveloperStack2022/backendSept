@@ -15,3 +15,5 @@ export * from './db-check-solicitud-by-id'
 
 // Solicitudes Test
 export * from './solicitud_test'
+
+export * from './excel'

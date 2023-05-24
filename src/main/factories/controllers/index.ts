@@ -16,3 +16,6 @@ export * from './load-solicitud-result-controller-factory'
 
 // solicitud Test 
 export * from './solicitud_test'
+
+// Excel 
+export * from './excel'

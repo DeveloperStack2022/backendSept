@@ -10,3 +10,6 @@ export * from './load-solicitud-result-controller'
 
 // Solicitud Test 
 export * from './solicitud-test'
+
+// Excel 
+export * from './excel'

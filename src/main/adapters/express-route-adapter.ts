@@ -2,8 +2,12 @@ import { Controller } from '@/presentation/protocols'
 
 import { Request, Response } from 'express'
 
+interface RequestAccountId extends Request {
+  accountId?:string
+}
+
 export const adaptRoute = (controller: Controller) => {
-  return async (req: Request, res: Response) => {
+  return async (req: RequestAccountId, res: Response) => {
     const request = {
       ...(req.body || {}),
       ...(req.params || {}),

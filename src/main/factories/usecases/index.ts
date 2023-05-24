@@ -15,3 +15,6 @@ export * from './load-solicitud-result-factory'
 
 // solicitudes Test
 export * from './solicitud_test'
+
+// Excels 
+export * from './excles-red'

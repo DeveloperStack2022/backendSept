@@ -16,3 +16,6 @@ export * from './load-solicitud-result'
 
 // Solicitud Test 
 export * from './solicitudes_test'
+
+// Excel 
+export * from './read-excels'
