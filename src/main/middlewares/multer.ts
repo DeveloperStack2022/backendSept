@@ -23,6 +23,7 @@ export const adaptMulter: RequestHandler = (req, res, next) => {
 
   const upload = multer({storage:diskStorage,fileFilter:fileFiler}).single('file')
   upload(req, res, (error) => {
+   
     if (error !== undefined) {
         return res.status(500).json({ error: serverError,message: 'test'})
     }

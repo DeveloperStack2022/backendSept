@@ -3,6 +3,7 @@ import {SaveExcelController} from '@/presentation/controllers'
 import {makeDbExcles,makeDbAddSolicitud, makeLogControllerDecorator} from '@/main/factories'
 
 export const makeSaveExcelController = ():Controller => {
-    const controller = new SaveExcelController(makeDbAddSolicitud(),makeDbExcles())
+    
+    const controller = new SaveExcelController(makeDbExcles(),makeDbExcles(),makeDbExcles())
     return makeLogControllerDecorator(controller)
 }

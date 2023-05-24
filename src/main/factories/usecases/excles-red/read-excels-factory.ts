@@ -4,5 +4,5 @@ import {DbExcelSave} from '@/data/usecases'
 
 export const makeDbExcles = (): ExcelI => {
     const excelAdapter = new XslxAdapter()
-    return new DbExcelSave(excelAdapter)
+    return new DbExcelSave(excelAdapter,excelAdapter,excelAdapter)
 }
