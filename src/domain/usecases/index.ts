@@ -13,9 +13,9 @@ export * from './load-solicitudes'
 export * from './load-by-id-solicitud'
 export * from './check-solicitud-by-id'
 export * from './load-solicitud-result'
+export * from './add-many-solicitud'
 
 // Solicitud Test 
 export * from './solicitudes_test'
-
 // Excel 
 export * from './read-excels'

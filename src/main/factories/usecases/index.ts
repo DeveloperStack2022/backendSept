@@ -12,7 +12,7 @@ export * from './add-solicitud-factory'
 export * from './load-solicitudes-factory'
 export * from './check-solicitud-by-id-factory'
 export * from './load-solicitud-result-factory'
-
+export * from './add-many-solicitd-factory'
 // solicitudes Test
 export * from './solicitud_test'
 

@@ -12,6 +12,7 @@ export * from './db-add-solicitud'
 export * from './db-load-solicitudes'
 export * from './db-load-solicitud-by-id'
 export * from './db-check-solicitud-by-id'
+export * from './db-add-many-solicitud'
 
 // Solicitudes Test
 export * from './solicitud_test'

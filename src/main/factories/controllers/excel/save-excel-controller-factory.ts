@@ -1,9 +1,9 @@
 import { Controller } from "@/presentation/protocols";
 import {SaveExcelController} from '@/presentation/controllers'
-import {makeDbExcles,makeDbAddSolicitud, makeLogControllerDecorator} from '@/main/factories'
+import {makeDbExcles,makeDbAddManySolicitud, makeLogControllerDecorator} from '@/main/factories'
 
 export const makeSaveExcelController = ():Controller => {
     
-    const controller = new SaveExcelController(makeDbExcles(),makeDbExcles(),makeDbExcles())
+    const controller = new SaveExcelController(makeDbAddManySolicitud(),makeDbExcles(),makeDbExcles(),makeDbExcles())
     return makeLogControllerDecorator(controller)
 }

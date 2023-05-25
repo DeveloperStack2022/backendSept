@@ -1,11 +1,11 @@
 import {Controller, HttpResponse} from '@/presentation/protocols'
 import {noContent, serverError} from '@/presentation/helpers'
-import {AddSolicitud,ExcelI,TranslateToJsonI,ViewData} from '@/domain/usecases'
+import {AddSolicitud,ExcelI,TranslateToJsonI,ViewData,AddManySolicitud} from '@/domain/usecases'
 
 export class SaveExcelController implements Controller {
 
     constructor(
-        // private readonly addSolicitud: AddSolicitud,
+        private readonly addSolicitud: AddManySolicitud,
         private readonly readExcel:ExcelI,
         private readonly translateToJson: TranslateToJsonI,
         private readonly viewData: ViewData
@@ -17,12 +17,11 @@ export class SaveExcelController implements Controller {
             const sheet = read_excel.SheetNames[0]
             const translateToJson =  this.translateToJson.sheet_to_json(read_excel.Sheets[sheet])
             const viewDataJson = this.viewData.view_json(translateToJson)
-            viewDataJson.map(item => {
-                console.log(item)
-            })
-            // await this.addSolicitud.add({
-            //     ...read_excel
+            
+            // viewDataJson.map(item => {
+            //     console.log(item)
             // })
+            await this.addSolicitud.addMany(viewDataJson as any)
             return noContent()
         } catch (error) {
             console.log(error)

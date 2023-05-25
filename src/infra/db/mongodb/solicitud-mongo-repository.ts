@@ -1,10 +1,10 @@
 import { MongoHelper, QueryBuilder } from '@/infra/db'
-import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepository,CheckSolicitudByIdRepository } from '@/data/protocols/db'
+import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository } from '@/data/protocols/db'
 import { ObjectId } from 'mongodb'
-import { AddSolicitud } from '@/domain/usecases'
+import { AddManySolicitud, AddSolicitud } from '@/domain/usecases'
 import { SolicitudModel } from '@/domain/models'
 
-export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository {
+export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository {
   async add (data: AddSolicitud.Params): Promise<void> {
     const solicitudCollection = MongoHelper.getCollection('solicitud')
     const celularCollection = MongoHelper.getCollection('celulares')
@@ -129,5 +129,53 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
       }
     })
     return solicitud !== null
+  }
+  async addMany(data: AddManySolicitud.Params[]): Promise<void> {
+    const solicitudCollection = MongoHelper.getCollection('solicitud')
+    // data.map(item => console.log(item))
+
+    // Math.ceil(data.length / 3)
+    // let datos = []
+    const valores = this.addDataArray(data)
+    console.log(valores)
+      // for(let i = 0; i< data.length - 1; i++ ){
+    //   if (data[i].hora == data[i + 1].hora && data[i].fecha == data[i + 1].fecha) {
+    //     // console.log(`Este ${JSON.stringify(data[i])} es igual a este ${JSON.stringify(data[i + 1])}`)
+    //     datos.push(valores)
+    //   }
+    // // }
+    // console.log(datos.length)
+    // console.log()
+    // datos.map(e => console.log("Array datos -> "+ JSON.stringify(e)))
+  }
+
+  private addDataArray(datos:any[]):any[] {
+    return datos.reduce((acc,current)=> {
+      const founddItem = acc.find(it => (it.hora == current.hora && it.unidad == current.unidad))
+      if(founddItem){
+        founddItem.celulares = founddItem.celulares ? [...founddItem.celulares, {'celulares':current.numero_celular,'imsi':current.imsi}] : [{'celulares':current.numero_celular,'imsi':current.imsi}]
+        founddItem.ubicaciones = founddItem.ubicaciones ? [...founddItem.ubicaciones,{'latitud':current.latitud,'longitud':current.longitud}]: [{'latitud':current.latitud,'longitud':current.longitud}]
+      }else {
+        delete current.numero_celular
+        delete current.imsi
+        delete current.latitud
+        delete current.longitud
+        acc.push({
+          ...current,
+          'celulares':[{
+            'numero_celular':current.numero_celular
+          }],
+          'ubicaciones':[{
+            'latitud':current.latitud,
+            'longitud':current.longitud
+          }]
+        })
+      }
+      delete acc.numero_celular
+      delete acc.imsi
+      delete acc.latitud
+      delete acc.longitud
+      return acc;
+    },[])
   }
 }
