@@ -1,20 +1,20 @@
 import { AccessDeniedError } from "../errors";
-import { forbidden, serverError } from "../helpers";
+import { forbidden, serverError,ok } from "../helpers";
 import { HttpResponse, Middleware } from "../protocols";
-import {ValidationFile} from '@/domain/usecases'
+import {SaveFileExcel} from '@/domain/usecases'
+
 export class MulterMiddleware implements Middleware {
     constructor(
-        // Verificacion si es valido el archivo DI
-        private readonly validationFile: ValidationFile
-    ){}
-
+        private readonly saveFile:SaveFileExcel
+    ) {}
     async handle(httpRequest: MulterMiddleware.Request):Promise<HttpResponse> {
         try {
             const {file} = httpRequest
-            const isValidate = await this.validationFile.validate(file)
-            if(!isValidate) {
-                return forbidden(new AccessDeniedError())
+            const save = this.saveFile.save(file)
+            if(save){
+                return ok({file: 'save'})
             }
+            return forbidden(new AccessDeniedError())
         } catch (error) {
             return serverError(error)
         }
@@ -26,6 +26,6 @@ export class MulterMiddleware implements Middleware {
 
 export namespace MulterMiddleware {
     export type Request = {
-        file: Buffer
+        file: Express.Multer.File
     }
 }
