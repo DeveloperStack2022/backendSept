@@ -3,6 +3,8 @@ import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepos
 import { ObjectId } from 'mongodb'
 import { AddManySolicitud, AddSolicitud } from '@/domain/usecases'
 import { SolicitudModel } from '@/domain/models'
+import moment from 'node-moment'
+
 
 export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository {
   async add (data: AddSolicitud.Params): Promise<void> {
@@ -12,6 +14,7 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
     const ubicacionCollection = MongoHelper.getCollection('ubicacion')
 
     const idsCelulares = []
+
     if (data.celular.length > 0) {
       data.celular.map(async item => {
         const id = (await celularCollection.insertOne({ ...item })).insertedId
@@ -131,45 +134,115 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
     return solicitud !== null
   }
   async addMany(data: AddManySolicitud.Params[]): Promise<void> {
-    const solicitudCollection = MongoHelper.getCollection('solicitud')
-    // data.map(item => console.log(item))
+    const solicitudCollection = MongoHelper.getCollection('solicitudess')
+    const celularesCollection = MongoHelper.getCollection('celularess')
+    const ubicacionesCollection = MongoHelper.getCollection('ubicacioness')
 
-    // Math.ceil(data.length / 3)
-    // let datos = []
     const valores = this.addDataArray(data)
     console.log(valores)
-      // for(let i = 0; i< data.length - 1; i++ ){
-    //   if (data[i].hora == data[i + 1].hora && data[i].fecha == data[i + 1].fecha) {
-    //     // console.log(`Este ${JSON.stringify(data[i])} es igual a este ${JSON.stringify(data[i + 1])}`)
-    //     datos.push(valores)
+    for(let i = 0; i < valores.length; i++){
+      let id_solicitud = (await solicitudCollection.insertOne({
+        'hora': valores[i].hora,
+        'fecha': moment(valores[i].fecha).toISOString(),
+        'ip':valores[i].ip,
+        'delito':valores[i].delito,
+        'organizacion_delicuencial':'',
+        caso:valores[i].caso,
+        plataforma:'SEPTIER'
+      })).insertedId
+
+      // Solo para las solicitudes que solo han pedido un solo numero 
+      if(valores[i].celulares.length == 1 && valores[i].ubicaciones.length == 1 ) {
+        // Inser numeros celulare 
+        let id_celular = (await celularesCollection.insertOne({
+          numero_celular:valores[i].celulares[0].numero_celular,
+          imsi: valores[i].celulares[0].imsi,
+          id_solicitud: id_solicitud
+        })).insertedId;
+
+        // Insert ubicaciones 
+        let id_ubicacion = (await ubicacionesCollection.insertOne({
+          latitud: valores[i].ubicaciones[0].latitud,
+          longitud: valores[i].ubicaciones[0].longitud,
+          id_solicitud: id_solicitud,
+          id_celular:id_celular
+        })).insertedId
+
+        await celularesCollection.updateOne({_id: id_celular},{
+          $set:{
+            id_ubicacion: id_ubicacion
+          }
+        })
+      }
+
+      if(valores[i].celulares.length > 1 && valores[i].ubicaciones.length > 1) {
+        // for(let j = 0; j < valores[i].celulares.length; j++ ) {
+
+        // }
+      }
+    }
+
+
+    // //  ******* Ubicaciones ***** / 
+    // let ids_ = null
+    // let ids_array_ubicaciones = [] // -> Aqui tenemos array de ids de ubicaciones 
+    // for(let i =0; i < valores.length; i++){
+    //   ids_ = await this.addManyUbicacion(valores[i].ubicaciones)
+     
+    //   for(let j = 0; j < Object.values(ids_).length ; j++){
+    //     ids_array_ubicaciones.push(Object.values(ids_)[j].toString())
     //   }
-    // // }
-    // console.log(datos.length)
-    // console.log()
-    // datos.map(e => console.log("Array datos -> "+ JSON.stringify(e)))
+    // }
+    
+    // // ***** Numero Celulares  **** //
+    // let ids_celulares = null
+    // let ids_array_celulares = [] // -> Aqui tenemos array de ids de celulares 
+    // for(let i =0; i < valores.length; i++){
+    //   ids_celulares = await this.addManyCelulares(valores[i].celulares)
+    //   for(let j = 0; j < Object.values(ids_celulares).length ; j++){
+    //     ids_array_celulares.push(Object.values(ids_celulares)[j].toString())
+    //   }
+    // }
+    
   }
+
+  private async addManyCelulares(data:any[],id_solicitud:string):Promise<any>{
+    const celularesCollection = MongoHelper.getCollection('celularess')
+    let data_ = Object.fromEntries(data.map(i => [i,id_solicitud]))
+    const ids_ = (await celularesCollection.insertMany(data_)).insertedIds
+    return ids_
+  }
+
+  private async addManyUbicacion(data:any[]):Promise<any>{
+    const ubicacionesCollection = MongoHelper.getCollection('ubicaciones')
+    const ids_ = (await ubicacionesCollection.insertMany(data)).insertedIds
+    return ids_
+  }
+
 
   private addDataArray(datos:any[]):any[] {
     return datos.reduce((acc,current)=> {
       const founddItem = acc.find(it => (it.hora == current.hora && it.unidad == current.unidad))
       if(founddItem){
-        founddItem.celulares = founddItem.celulares ? [...founddItem.celulares, {'celulares':current.numero_celular,'imsi':current.imsi}] : [{'celulares':current.numero_celular,'imsi':current.imsi}]
-        founddItem.ubicaciones = founddItem.ubicaciones ? [...founddItem.ubicaciones,{'latitud':current.latitud,'longitud':current.longitud}]: [{'latitud':current.latitud,'longitud':current.longitud}]
+        founddItem.celulares = founddItem.celulares ? [...founddItem.celulares, {'numero_celular':current.numero_celular,'imsi':current.imsi}] : [{'numero_celular':current.numero_celular,'imsi':current.imsi}]
+        founddItem.ubicaciones = founddItem.ubicaciones ? [...founddItem.ubicaciones,{'latitud':current.latitud == 0 ? '' : current.latitud,'longitud':current.longitud == 0 ? '':current.longitud }]: [{'latitud':current.latitud == 0 ? '' : current.latitud,'longitud':current.longitud == 0 ? '' : current.longitud}]
       }else {
+        
+        acc.push({
+          ...current,
+          'celulares':[{
+            'numero_celular':current.numero_celular,
+            'imsi':current.imsi
+          }],
+          'ubicaciones':[{
+            'latitud':current.latitud == 0 ?   '' : current.latitud,
+            'longitud':current.longitud == 0 ? '' : current.longitud
+          }]
+        })
         delete current.numero_celular
         delete current.imsi
         delete current.latitud
         delete current.longitud
-        acc.push({
-          ...current,
-          'celulares':[{
-            'numero_celular':current.numero_celular
-          }],
-          'ubicaciones':[{
-            'latitud':current.latitud,
-            'longitud':current.longitud
-          }]
-        })
       }
       delete acc.numero_celular
       delete acc.imsi
