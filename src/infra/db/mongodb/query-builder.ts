@@ -15,6 +15,13 @@ export class QueryBuilder {
     return this
   }
 
+  private addStepCounter(step:string,data:string):QueryBuilder {
+    this.query.push({
+      [step]:data
+    })
+    return this
+  }
+
   match (data: object): QueryBuilder {
     return this.addStep('$match', data)
   }
@@ -44,7 +51,14 @@ export class QueryBuilder {
   limit(data:number):QueryBuilder {
     return this.addStepOther('$limit',data as number)
   }
+
+  count(data:string):QueryBuilder {
+    return this.addStepCounter('$count',data)
+  }
+
   build (): object[] {
     return this.query
   }
+
+
 }

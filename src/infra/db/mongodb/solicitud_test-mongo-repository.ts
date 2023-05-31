@@ -6,8 +6,11 @@ export class SolicitudTestMongoRepository implements LoadSolicitudTestRepository
     async load(accountId: string, skip: number, limit: number): Promise<SolicitudModelTestResult> {
         // Get collection 
         const solicitudTestCollection = MongoHelper.getCollection('solicitud')
-        const n_documents:number =await solicitudTestCollection.count()
+       
         const query = new QueryBuilder()
+            .match({
+                'accountId':accountId
+            })
             .lookup({
                 from: 'solicitantes',
                 foreignField: '_id',
@@ -24,10 +27,19 @@ export class SolicitudTestMongoRepository implements LoadSolicitudTestRepository
             .skip(skip)
             .limit(limit)
             .build()
+        
+        const queryCounts = new QueryBuilder()
+            .match({
+                'accountId':accountId
+            })
+            .count('n_documents')
+            .build()
+        
         const solicitudes = await solicitudTestCollection.aggregate<SolicitudModelTest>(query).toArray()
-       
+        const n_documents = await solicitudTestCollection.aggregate(queryCounts).toArray()
+        
         return {
-            n_documents:n_documents,
+            n_documents:n_documents[0]?.n_documents,
             solicitud: solicitudes
         }
     }
