@@ -8,3 +8,5 @@ export * from './solicitudes_test/solicitud_test-results'
 
 export * from './uploadedFile'
 export * from './file'
+
+export * from './solicitud-by-numero'

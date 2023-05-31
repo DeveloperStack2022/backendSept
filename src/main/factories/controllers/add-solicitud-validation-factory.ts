@@ -3,7 +3,7 @@ import { Validation } from '@/presentation/protocols'
 
 export const makeAddSolicitudValidation = (): ValidationComposite => {
   const validations: Validation[] = []
-  for (const field of ['hora','plataforma','caso']) {
+  for (const field of ['hora','plataforma','caso','investigacion_previa','fecha']) {
     validations.push(new RequiredFieldValidation(field))
   }
   return new ValidationComposite(validations)

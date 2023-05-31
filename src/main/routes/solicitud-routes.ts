@@ -7,4 +7,6 @@ export default (router: Router): void => {
   router.post('/solicitud',auth,adaptRoute(makeAddSolicitudController()))
   router.get('/solicitud',auth,adaptRoute(makeLoadSolicitudesController()))
   router.get('/solicitud/:solicitudId/results',auth,adaptRoute(makeLoadSolicitudResultController()))
+  // Peticiones por numero celulares
+  // router.get('/solicitud/:numeroCelular',adaptRoute())
 }
