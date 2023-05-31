@@ -24,6 +24,9 @@ export class SolicitudTestMongoRepository implements LoadSolicitudTestRepository
                 localField: 'celular',
                 as: 'celulares_solicitados'
             })
+            .sort({
+                _id: -1
+            })
             .skip(skip)
             .limit(limit)
             .build()
