@@ -5,6 +5,7 @@ export * from './login-controller'
 export * from './save-survey-result-controller'
 export * from './signup-controller'
 // Solicitud
+export * from './solicitudes'
 export * from './add-solicitud-controller'
 export * from './load-solicitud-result-controller'
 

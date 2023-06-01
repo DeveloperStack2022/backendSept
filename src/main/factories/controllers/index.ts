@@ -9,6 +9,7 @@ export * from './signup-controller-factory'
 export * from './signup-validation-factory'
 
 // Solicitudes
+export * from './solicitud'
 export * from './add-solicitud-controller-factory'
 export * from './add-solicitud-validation-factory'
 export * from './load-solicitudes-controller-factory'

@@ -19,6 +19,7 @@ export type Celular = {
   numero_celular: string
   imsi: string
   id_ubicacion: string
+  id_solicitud?: string
 }
 
 export type Ubicacion = {

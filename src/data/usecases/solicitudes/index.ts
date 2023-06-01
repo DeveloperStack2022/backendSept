@@ -1,0 +1,1 @@
+export * from './db-load-solicitud-by-num-celular'

@@ -1,6 +1,20 @@
-import {} from '@/domain/models'
+export type SolicitudNumero = {
+   numero_celular:string;
+   solicitud:SolicitudM;
+   solicitante:SolicitanteM
+}
 
-export type SolicitudNumero = {}
+type SolicitudM = {
+   caso:string;
+   delito:string;
+   investigacion_previa:string;
+}
+
+type SolicitanteM = {
+   grado:string;
+   nombres_completos:string;
+   unidad:string;
+}
 
 /**
  * Model -> celular 
@@ -11,5 +25,9 @@ export type SolicitudNumero = {}
     - solicitante {_id solicitante }
     - caso
     - delito
-
+    - investigacion_previa
+ * Model -> Solicitantes
+    - grado
+    - nombres completos
+    - unidad 
  */
