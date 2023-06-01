@@ -5,8 +5,12 @@ export class NumeroCelularMongoRepository implements LoadNumCelularRepositoryI {
 
     async load_num_celular(numero_celular: string): Promise<LoadNumCelularRepositoryI.Result> {
         const numeroCelularCollection = MongoHelper.getCollection('celulares')
-
-        const numeroCelularDoc = await numeroCelularCollection.find({numero_celular:numero_celular}).toArray()
-        return numeroCelularDoc && MongoHelper.map(numeroCelularDoc)
+        const query = new QueryBuilder()
+            .match({
+                numero_celular:numero_celular
+            })
+            .build()
+        const docs_ = await numeroCelularCollection.aggregate(query).toArray()
+        return MongoHelper.mapCollection(docs_)
     }
 }   

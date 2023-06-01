@@ -2,7 +2,7 @@ import { MongoHelper, QueryBuilder } from '@/infra/db'
 import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository } from '@/data/protocols/db'
 import { ObjectId } from 'mongodb'
 import { AddManySolicitud, AddSolicitud } from '@/domain/usecases'
-import { SolicitudModel } from '@/domain/models'
+import { SolicitudResult } from '@/domain/models'
 import moment from 'node-moment'
 
 
@@ -91,7 +91,7 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
     return MongoHelper.mapCollection(solicitudes)
  }
 
-  async loadById (idSolicitud: string): Promise<SolicitudModel> {
+  async loadById (idSolicitud: string): Promise<SolicitudResult> {
     
     const solicitudCollection = MongoHelper.getCollection('solicitud')
     const query = new QueryBuilder()
@@ -118,7 +118,7 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
       })
       .build()
 
-    const solicitud = await solicitudCollection.aggregate<SolicitudModel>(query).toArray()
+    const solicitud = await solicitudCollection.aggregate<SolicitudResult>(query).toArray()
     return solicitud.length ? solicitud[0] : null
   }
 

@@ -7,18 +7,33 @@ export class DbLoadSolicitudByNumCelular implements LoadSolicitudesNumCelular {
         private readonly loadSolicitudById: LoadSolicitudByIdRepository,
     ){}
 
-    async load_solicitudes_num_celular(numero_celular: string): Promise<LoadSolicitudesNumCelular.Result> {
+    async load_solicitudes_num_celular(request: LoadSolicitudesNumCelular.Params): Promise<LoadSolicitudesNumCelular.Result> {
+       
         try {
-            const numeros_celular = await this.loadNumeroCelular.load_num_celular(numero_celular)
+            const numeros_celular = await this.loadNumeroCelular.load_num_celular(request.numeroCelular)
             if(numeros_celular.length > 0 ){ 
                 // numero_celular.length -> 1 ---- 0 = numero_celular.length - 1 || numero_celular[0]
                 const id_solicitud = numeros_celular[numeros_celular.length - 1].id_solicitud
                 // Query Solicitud ByID  -> id_solicitud
-                const solicitud_ = await this.loadSolicitudById.loadById(id_solicitud)
-                console.log(solicitud_)
-                return ;
+               
+                const solicitud_ = await this.loadSolicitudById.loadById(id_solicitud.toString())
+               
+                return {
+                    numero_celular:request.numeroCelular,
+                    solicitante: {
+                        grado: solicitud_.solicitante_result[0].grado,
+                        nombres_completos: solicitud_.solicitante_result[0].nombres_completos,
+                        unidad: solicitud_.solicitante_result[0].unidad
+                    },
+                    solicitud: {
+                        caso: solicitud_.caso,
+                        delito: solicitud_.delito,
+                        investigacion_previa: solicitud_.investigacion_previa
+                    }
+                }
             }
         } catch (error) {
+           
             return null
         }
     }

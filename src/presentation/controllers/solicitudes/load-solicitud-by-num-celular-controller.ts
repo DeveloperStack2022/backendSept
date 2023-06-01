@@ -11,9 +11,8 @@ export class LoadSolicitudByNumCelular implements Controller {
 
 
     async handle(request: LoadSolicitudByNumCelular.Request):Promise<HttpResponse>{
-        const numero_celular = request
         try {
-            const solicitudParseada  = await this.loadSolicitudByNumCelular.load_solicitudes_num_celular(numero_celular)
+            const solicitudParseada  = await this.loadSolicitudByNumCelular.load_solicitudes_num_celular(request)
             return solicitudParseada ? ok(solicitudParseada) : noContent()
         } catch (error) {
             return serverError(error)
@@ -22,5 +21,8 @@ export class LoadSolicitudByNumCelular implements Controller {
 }
 
 export namespace LoadSolicitudByNumCelular {
-    export type Request = string
+    export type Request = {
+        numeroCelular:string;
+        accountId?:string;
+    }
 }

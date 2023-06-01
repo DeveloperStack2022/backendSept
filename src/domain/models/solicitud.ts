@@ -14,6 +14,22 @@ export type SolicitudModel = {
   ubicacion: Ubicacion[]
 }
 
+export type SolicitudResult = { 
+  id: string
+  hora: string
+  fecha: Date
+  plataforma: string
+  investigacion_previa: string // Ip
+  delito?: string
+  caso?: string
+  evento?: string
+  organizacion_delicuencial?: string
+  // Relaciones
+  solicitante_result: Solicitante
+  celular: Celular[]
+  ubicacion: Ubicacion[]
+}
+
 export type Celular = {
   id: string
   numero_celular: string
