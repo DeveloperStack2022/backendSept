@@ -23,11 +23,13 @@ export class DbLoadSolicitudByNumCelular implements LoadSolicitudesNumCelular {
                     solicitante: {
                         grado: solicitud_.solicitante_result[0].grado,
                         nombres_completos: solicitud_.solicitante_result[0].nombres_completos,
-                        unidad: solicitud_.solicitante_result[0].unidad
+                        unidad: solicitud_.solicitante_result[0].unidad,
+                        zona:solicitud_.solicitante_result[0].zona || ''
                     },
                     solicitud: {
                         caso: solicitud_.caso,
                         delito: solicitud_.delito,
+                        organizacion_delicuencial: solicitud_.organizacion_delicuencial,
                         investigacion_previa: solicitud_.investigacion_previa
                     }
                 }
