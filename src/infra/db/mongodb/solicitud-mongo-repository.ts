@@ -1,12 +1,13 @@
 import { MongoHelper, QueryBuilder } from '@/infra/db'
 import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository } from '@/data/protocols/db'
+import {LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository} from '@/data/protocols/db'
 import { ObjectId } from 'mongodb'
 import { AddManySolicitud, AddSolicitud } from '@/domain/usecases'
 import { SolicitudResult } from '@/domain/models'
 import moment from 'node-moment'
 
 
-export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository {
+export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository,LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository {
   async add (data: AddSolicitud.Params): Promise<void> {
     const solicitudCollection = MongoHelper.getCollection('solicitud')
     const celularCollection = MongoHelper.getCollection('celulares')
@@ -212,6 +213,31 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
     }
 
   }   
+
+  async load_solicitud_by_caso(caso: string): Promise<LoadsolicitudByCasoRepository.Result> {
+    const solicitudCollection = MongoHelper.getCollection('solicitud')
+
+    const query = new QueryBuilder()
+      .match({
+        'caso':caso
+      })
+      .build()
+    
+    const solicitudes =  await solicitudCollection.aggregate(query).toArray()
+    return MongoHelper.mapCollection(solicitudes)
+  }
+
+  async load_solicitud_by_ip(ip: string): Promise<LoadSolicitudByIpRepository.Result> {
+    const solicitudCollection = MongoHelper.getCollection('solicitud')
+    const query = new QueryBuilder()
+      .match({
+        'investigacion_previa':ip
+      })
+      .build()
+    const solicitudes = await solicitudCollection.aggregate(query).toArray()
+    return MongoHelper.mapCollection(solicitudes)
+  }
+
 
   private async addManyCelulares(data:any[],id_solicitud:ObjectId ):Promise<any>{
     const celularesCollection = MongoHelper.getCollection('celulares_excel')

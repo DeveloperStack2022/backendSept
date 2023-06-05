@@ -2,7 +2,6 @@ import {LoadSolicitudesNumCelular} from '@/domain/usecases'
 import {Controller,HttpResponse} from '@/presentation/protocols'
 import {noContent,serverError,ok} from '@/presentation/helpers'
 
-
 export class LoadSolicitudByNumCelular implements Controller {
 
     constructor(
