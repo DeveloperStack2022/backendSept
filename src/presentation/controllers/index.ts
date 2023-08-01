@@ -14,3 +14,6 @@ export * from './solicitud-test'
 
 // Excel 
 export * from './excel'
+
+// Registro Analista 
+export * from './Registro_Analista'

@@ -7,3 +7,6 @@ export * from './add-many-solicitud-repository'
 export * from './load-solicitud-by-num-celular-repository'
 export * from './load-solicitud-by-caso-repository'
 export * from './load-solicitud-by-ip-repository'
+export * from './load-solicitud-by-num_celular-repository'
+
+export * from './load-search-repository'

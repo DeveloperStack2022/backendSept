@@ -19,3 +19,6 @@ export * from './db-add-many-solicitud'
 export * from './solicitud_test'
 
 export * from './excel'
+
+// Registro de Analista 
+export * from './Registro_Analista'

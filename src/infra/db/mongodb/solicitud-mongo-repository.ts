@@ -1,13 +1,14 @@
 import { MongoHelper, QueryBuilder } from '@/infra/db'
 import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository } from '@/data/protocols/db'
-import {LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository} from '@/data/protocols/db'
+import {LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository,LoadSolicitudesNumeroCelularRepositoryI} from '@/data/protocols/db'
 import { ObjectId } from 'mongodb'
 import { AddManySolicitud, AddSolicitud } from '@/domain/usecases'
 import { SolicitudResult } from '@/domain/models'
 import moment from 'node-moment'
 
 
-export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository,LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository {
+export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository,LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository,LoadSolicitudesNumeroCelularRepositoryI {
+  
   async add (data: AddSolicitud.Params): Promise<void> {
     const solicitudCollection = MongoHelper.getCollection('solicitud')
     const celularCollection = MongoHelper.getCollection('celulares')
@@ -223,8 +224,19 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
       })
       .build()
     
+    const queryCounts = new QueryBuilder()
+      .match({
+        'caso':caso
+      })
+      .count('n_documents')
+      .build()
+    
+    const n_documents = await solicitudCollection.aggregate(queryCounts).toArray()
     const solicitudes =  await solicitudCollection.aggregate(query).toArray()
-    return MongoHelper.mapCollection(solicitudes)
+    return {
+      solicitudes:MongoHelper.mapCollection(solicitudes),
+      n_documents: n_documents[0]?.n_documents
+    }
   }
 
   async load_solicitud_by_ip(ip: string): Promise<LoadSolicitudByIpRepository.Result> {
@@ -234,10 +246,37 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
         'investigacion_previa':ip
       })
       .build()
+
+    const queryCounts = new QueryBuilder()
+    .match({
+        'investigacion_previa':ip
+    })
+    .count('n_documents')
+    .build()
     const solicitudes = await solicitudCollection.aggregate(query).toArray()
-    return MongoHelper.mapCollection(solicitudes)
+    const n_documents = await solicitudCollection.aggregate(queryCounts).toArray()
+    return {
+      n_documents:n_documents[0]?.n_documents,
+      solicitudes:MongoHelper.mapCollection(solicitudes)
+    }
   }
 
+  async load_solicitudes_numero_celular(num_celular: any): Promise<LoadSolicitudesNumeroCelularRepositoryI.Result> {
+    const celularesCollection = MongoHelper.getCollection('celulares')
+    const query = new QueryBuilder()
+      .lookup({
+        from:'solicitud',
+        localField:'id_solicitud',
+        foreignField:'_id',
+        as:'solicitud_celulares'
+      })
+      .build()
+      const celulares = await celularesCollection.aggregate<LoadSolicitudesNumeroCelularRepositoryI.Result>(query).toArray() 
+      return MongoHelper.mapCollection(celulares)
+  }
+
+
+  //  -----------------------------------------
 
   private async addManyCelulares(data:any[],id_solicitud:ObjectId ):Promise<any>{
     const celularesCollection = MongoHelper.getCollection('celulares_excel')

@@ -6,3 +6,7 @@ export * from './solicitud'
 
 // Solicitudes Test 
 export * from './solicitud_test'
+
+
+// Registr Analista 
+export * from './Registro_Analista'

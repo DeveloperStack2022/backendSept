@@ -3,7 +3,8 @@ import {
   surveyPath,
   signUpPath,
   surveyResultPath,
-  solicitudPath
+  solicitudPath,
+  SolicitudByPath
 } from './paths/'
 
 export default {
@@ -11,5 +12,6 @@ export default {
   '/signup': signUpPath,
   '/surveys': surveyPath,
   '/surveys/{surveyId}/results': surveyResultPath,
-  '/solicitud': solicitudPath
+  '/solicitud': solicitudPath,
+  '/solicitudBy':SolicitudByPath.get
 }

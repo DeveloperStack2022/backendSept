@@ -19,3 +19,6 @@ export * from './solicitud_test'
 
 // Excels 
 export * from './excles-red'
+
+// Registro Analistas 
+export * from './Registro_Analistas'

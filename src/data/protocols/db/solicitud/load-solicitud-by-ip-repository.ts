@@ -5,6 +5,9 @@ export interface LoadSolicitudByIpRepository {
 }
 
 export namespace LoadSolicitudByIpRepository {
-    export type Result = SolicitudResult[]
+    export type Result = {
+        solicitudes:SolicitudResult[],
+        n_documents:number
+    }
     export type Params = string;
 }

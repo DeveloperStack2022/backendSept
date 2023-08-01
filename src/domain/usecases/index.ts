@@ -21,3 +21,6 @@ export * from './add-many-solicitud'
 export * from './solicitudes_test'
 // Excel 
 export * from './read-excels'
+
+// Registro Analistas 
+export * from './Registro_Analistas'

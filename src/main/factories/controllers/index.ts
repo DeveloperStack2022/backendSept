@@ -20,3 +20,6 @@ export * from './solicitud_test'
 
 // Excel 
 export * from './excel'
+
+//Registro Analistas 
+export * from './Registro_Analista'

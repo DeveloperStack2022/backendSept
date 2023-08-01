@@ -22,7 +22,12 @@ export default {
   {
     name: 'Solicitud',
     description: 'APIs relacionadas a Solicitud'
-  }],
+  },
+  {
+    name: 'SolicitudBy',
+    description: 'APIs relacionadas a Solicitud'
+  }
+],
   paths,
   schemas,
   components

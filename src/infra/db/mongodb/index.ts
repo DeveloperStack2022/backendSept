@@ -10,3 +10,6 @@ export * from './solicitud-num-celular-repository'
 
 // solicitud Test 
 export * from './solicitud_test-mongo-repository'
+
+// Registro Analista 
+export * from './Registro_Analista'
