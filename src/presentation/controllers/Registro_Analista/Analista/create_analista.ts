@@ -1,19 +1,26 @@
 import {Analista,Unidad,Zona,Direcciones} from '@/domain/models'
 
 import { Controller, HttpResponse } from "@/presentation/protocols";
-import {CreateAnalista } from '@/domain/usecases'
-import { noContent ,ok, serverError} from '@/presentation/helpers';
+import {CreateAnalista,GetAnalistaByNumCl } from '@/domain/usecases'
+import { noContent ,ok, serverError,forbidden} from '@/presentation/helpers';
+import {NoReplyError} from '@/presentation/errors'
+
 
 
 export class CreateAnalistaPresentationController implements Controller {
     constructor(
-        private readonly createAnalista: CreateAnalista
+        private readonly createAnalista: CreateAnalista,
+        private readonly getAnalistaByNum: GetAnalistaByNumCl
     ){}
 
     async handle(request: CreateAnalistaPresentationController.Request):Promise<HttpResponse> {
         try {
             const data = request
-            const analista_created = await this.createAnalista.create_analista({Analista: data.Anlista,Direcciones:data.Direcciones,Unidad: data.Unidad,Zona:data.Zona})
+            const analista_existe = await this.getAnalistaByNum.search_analista_by_num_cl(data.Analista.numero_cedula)
+            if(analista_existe){
+                return forbidden(new NoReplyError('numero_cedula'))
+            }
+            const analista_created = await this.createAnalista.create_analista({Analista: data.Analista,Direcciones:data.Direcciones,Unidad: data.Unidad,Zona:data.Zona})
             return analista_created ? ok(analista_created) : noContent()
         } catch (error) {
             return serverError(error)
@@ -23,7 +30,7 @@ export class CreateAnalistaPresentationController implements Controller {
 
 export namespace CreateAnalistaPresentationController {
     export type Request = {
-        Anlista:Analista,
+        Analista:Analista,
         Direcciones: Direcciones,
         Zona:Zona,
         Unidad:Unidad

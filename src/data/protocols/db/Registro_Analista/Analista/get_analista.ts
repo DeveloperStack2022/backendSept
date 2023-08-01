@@ -1,4 +1,5 @@
 import {Analista,Unidad,Zona,Direcciones} from '@/domain/models'
+
 export interface GetAnalista {
     get_analista(id_analista:GetAnalista.Params): Promise<GetAnalista.Result>
 }

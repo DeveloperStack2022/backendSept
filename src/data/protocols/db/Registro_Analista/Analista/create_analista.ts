@@ -1,4 +1,4 @@
-import {Analista,Unidad,Zona,Direcciones} from '@/domain/models'
+import {Analista} from '@/domain/models'
 
 export interface CreateAnalista {
     create_analista(data:CreateAnalista.Params):Promise<CreateAnalista.Resutl>
@@ -6,10 +6,7 @@ export interface CreateAnalista {
 
 export namespace CreateAnalista {
     export type Params = {
-        Analista: Analista
-        Unidad:Unidad
-        Zona:Zona
-        Direcciones:Direcciones
+       Analista: Analista
     }
     export type Resutl = {
         create:boolean
