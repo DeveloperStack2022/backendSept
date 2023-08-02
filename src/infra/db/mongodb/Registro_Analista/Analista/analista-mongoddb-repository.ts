@@ -45,7 +45,6 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
         })
         .build()
         const analista = await AnalistaCollection.aggregate<GetAnalistaByNumCl.Result>(query).toArray()
-        console.log(analista)
         return analista.length ? analista[0] : null
     }
     

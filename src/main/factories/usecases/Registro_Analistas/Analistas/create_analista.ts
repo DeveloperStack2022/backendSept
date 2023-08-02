@@ -8,5 +8,5 @@ export const makeDbCreateAnalista = ():CreateAnalista => {
     const repositoryUnidad = new UnidadMongodbRepository()
     const repositoryZona = new ZonaMongodbRepository()
     
-    return new DbCreateAnalista(repositoryAnalista,repositoryDireccion,repositoryDireccion,repositoryUnidad,repositoryUnidad,repositoryZona,repositoryZona)
+    return new DbCreateAnalista(repositoryAnalista,repositoryDireccion,repositoryDireccion,repositoryDireccion,repositoryUnidad,repositoryUnidad,repositoryZona,repositoryZona,repositoryZona)
 }

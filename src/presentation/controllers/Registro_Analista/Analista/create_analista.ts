@@ -17,16 +17,19 @@ export class CreateAnalistaPresentationController implements Controller {
     async handle(request: CreateAnalistaPresentationController.Request):Promise<HttpResponse> {
         try {
             const data = request
-            console.log(data.Analista.numero_cedula)
             const analista_existe = await this.getAnalistaByNum.search_analista_by_num_cl(data.Analista.numero_cedula)
-            console.log('Analista Existe'+analista_existe)
             if(analista_existe){
                 return forbidden(new NoReplyError('numero_cedula'))
             }
+            
             const analista_created = await this.createAnalista.create_analista({Analista: data.Analista,Direcciones:data.Direcciones,Unidad: data.Unidad,Zona:data.Zona})
-
+            console.log(analista_created.id_unidad)
             // Update Analista  -> id solo una Direccion - ids_zonas -> Array de Ids - nombre_unidad -> string
-            await this.updateUnidad.update_unidad({id_direccion:'',id_zonas:[''],nombre_unidad:''})
+            await this.updateUnidad.update_unidad({
+                id_direccion:analista_created.Direccion.id,
+                id_zonas:analista_created.Zona.id,
+                id:analista_created.id_unidad
+            })
             
             return analista_created ? ok(analista_created) : noContent()
         } catch (error) {

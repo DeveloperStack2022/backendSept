@@ -17,24 +17,25 @@ export class UnidadMongodbRepository implements CreateUnidad,SearchUnidad,Update
     
     async search_unidad(nombre_unidad: SearchUnidad.Params): Promise<SearchUnidad.Result> {
         const SearchUnidad = MongoHelper.getCollection('Unidades')
-
-        const query = new QueryBuilder()
-        .match({
-            nombre_unidad: nombre_unidad
-        })
-        .build()
-
-        const unidad = await SearchUnidad.aggregate<SearchUnidad.Result>(query).toArray()
-        return unidad.length ? unidad[0] : null
+        const unidad = await SearchUnidad.findOne({nombre_unidad:nombre_unidad.nombre_unidad})
+        return unidad && MongoHelper.map(unidad)
     }
+
+    
     async update_unidad(data: UpdateUnidad.Params): Promise<void> {
         const UnidadCollection = MongoHelper.getCollection('Unidades')
         
-        await UnidadCollection.findOneAndUpdate({_id: new ObjectId(data.id)},{
+        // await UnidadCollection.findOneAndUpdate({_id: new ObjectId(data.id)},{
+        //     // $set:{
+        //     //     'id_direccion':data.id_direccion,
+        //     // },
+        // })
+        await UnidadCollection.updateOne({ _id: new ObjectId(data.id)},{
+            $push:{'id_zonas':data.id_zonas},
             $set:{
-                'id_direccion':data.id_direccion,
-                'id_zonas':[data.id_zonas]
+                'id_direccion':data.id_direccion
             }
         })
     }
+
 }

@@ -16,5 +16,6 @@ export namespace CreateAnalista {
         create:boolean,
         Direccion:Direcciones,
         Zona:Zona
+        id_unidad:string
     }
 }

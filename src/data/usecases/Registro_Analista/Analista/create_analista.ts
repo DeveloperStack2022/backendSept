@@ -1,6 +1,6 @@
 import {CreateAnalista} from '@/domain/usecases'
-import {CreateAnalista as createAnalista,CreateUnidad,SearchUnidad,CreateZona, SearchZona, UpdateZona} from '@/data/protocols'
-import {SearchDireccion,CreateDireccion,UpdateUnidad} from '@/data/protocols'
+import {CreateAnalista as createAnalista,CreateUnidad,SearchUnidad,CreateZona, SearchZona, UpdateZona, AddUnidadToZone} from '@/data/protocols'
+import {SearchDireccion,CreateDireccion,UpdateDireccion} from '@/data/protocols'
 
 
 /**
@@ -27,10 +27,12 @@ export class DbCreateAnalista implements CreateAnalista {
         private readonly create_analista_: createAnalista,
         private readonly search_direccion_: SearchDireccion,
         private readonly create_direccion_: CreateDireccion,
+        private readonly update_direccion_: UpdateDireccion,
         private readonly create_unidad_: CreateUnidad,
         private readonly search_unidad_: SearchUnidad,
         private readonly create_zona_: CreateZona,
         private readonly search_zona_:SearchZona,
+        private readonly add_unidad_zona: AddUnidadToZone
     ){}
 
     async create_analista(data: CreateAnalista.Params): Promise<CreateAnalista.Result> {
@@ -40,30 +42,40 @@ export class DbCreateAnalista implements CreateAnalista {
             let zona_:SearchZona.Result     
             //Unidad
             const nombre_unidad = data.Unidad.nombre_unidad
-
+      
             unidad_ = await this.search_unidad_.search_unidad({nombre_unidad})
-            
-            if(!unidad_.id){
+            if(!unidad_?.id){
                 unidad_ = await this.create_unidad_.create_unidad({...data.Unidad})
+                /**
+                 *  Se crea otra unidad y si pertenece a una direccion Existente hacerle un UpdateOne a la Direccion $push 
+                 * 
+                 */
+                const search_direccion = await this.search_direccion_.search_direccion({nombre_direccion:data.Direcciones.nombre_direccion})
+                if(search_direccion?.id){
+                    await this.update_direccion_.update_direccion({id_unidad:unidad_.id,id:search_direccion.id})
+                }
             }
 
             //Direccion 
             created_direccion = await this.search_direccion_.search_direccion({nombre_direccion:data.Direcciones.nombre_direccion})
-            if(!created_direccion.id){
+            if(!created_direccion?.id){
                 created_direccion = await this.create_direccion_.create_direccion({...data.Direcciones,id_unidades:[unidad_.id]})
             }
-
             // Zona
             zona_ = await this.search_zona_.search_zona({numero_zona:data.Zona.numero_zona})
             if(!zona_){
                 zona_ = await this.create_zona_.create_zona({numero_zona:data.Zona.numero_zona,id_unidad:unidad_.id})
+            }else{
+                // 
+                await this.add_unidad_zona.add_unidad_to_zone(zona_.id,unidad_?.id)
             }
             // await this.update_unidad.update_unidad()
             await this.create_analista_.create_analista({...data.Analista,ID_UNIDAD:unidad_.id,ID_ZONA:zona_.id})
             return {
                 create:true,
                 Direccion:created_direccion,
-                Zona:zona_
+                Zona:zona_,
+                id_unidad: unidad_?.id
             }
             
         } catch (error) {

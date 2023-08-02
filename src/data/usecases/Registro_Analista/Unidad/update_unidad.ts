@@ -1,6 +1,6 @@
 import {UpdateUnidad} from '@/domain/usecases'
 import {UpdateUnidad as updateUnidad} from '@/data/protocols'
-import { Unidad } from '@/domain/models'
+
 
 
 export class DbUpdateUnidad implements UpdateUnidad {
@@ -8,7 +8,7 @@ export class DbUpdateUnidad implements UpdateUnidad {
         private readonly update_analista_ : updateUnidad
     ){}
 
-    async update_unidad(data: Unidad): Promise<void> {
+    async update_unidad(data: UpdateUnidad.Params): Promise<void> {
         try {
             await this.update_analista_.update_unidad(data)
         } catch (error) {
