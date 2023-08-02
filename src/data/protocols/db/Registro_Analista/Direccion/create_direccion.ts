@@ -4,8 +4,6 @@ export interface CreateDireccion {
 }
 
 export namespace CreateDireccion {
-    export type Params = {
-        Direccion:Direcciones
-    }
-    export type Result = boolean
+    export type Params = Direcciones
+    export type Result = Direcciones
 }

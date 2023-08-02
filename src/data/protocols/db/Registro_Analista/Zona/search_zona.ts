@@ -1,3 +1,4 @@
+import { Zona } from "@/domain/models";
 
 export interface SearchZona {
     search_zona(nombre_zona:SearchZona.Params):Promise<SearchZona.Result>
@@ -8,5 +9,5 @@ export namespace SearchZona {
         numero_zona:number;
     }
 
-    export type Result = boolean
+    export type Result = Zona
 }

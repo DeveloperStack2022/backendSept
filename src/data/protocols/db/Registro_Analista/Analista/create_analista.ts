@@ -5,9 +5,7 @@ export interface CreateAnalista {
 }
 
 export namespace CreateAnalista {
-    export type Params = {
-       Analista: Analista
-    }
+    export type Params = Analista
     export type Resutl = {
         create:boolean
     }

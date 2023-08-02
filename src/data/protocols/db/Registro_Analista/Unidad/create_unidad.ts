@@ -5,8 +5,6 @@ export interface CreateUnidad {
 }
 
 export namespace CreateUnidad {
-    export type Params = {
-        Unidad:Unidad
-    }
-    export type Result = boolean
+    export type Params = Unidad
+    export type Result = Unidad
 }

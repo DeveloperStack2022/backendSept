@@ -13,6 +13,8 @@ export namespace CreateAnalista {
     }
     
     export type Result = {
-        create:boolean
+        create:boolean,
+        Direccion:Direcciones,
+        Zona:Zona
     }
 }

@@ -5,7 +5,7 @@ import {GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl} from '@/da
 export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl {
 
     async get_analista(id_analista: GetAnalista.Params): Promise<GetAnalista.Result> {
-        const AnlistaCollection = MongoHelper.getCollection('Analista')
+        const AnlistaCollection = MongoHelper.getCollection('Analistas')
 
         const query = new QueryBuilder()
             .match({
@@ -17,9 +17,9 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
     }
 
     async create_analista(data: CreateAnalista.Params): Promise<CreateAnalista.Resutl> {
-        const AnalistaCollection = MongoHelper.getCollection('Analista')
+        const AnalistaCollection = MongoHelper.getCollection('Analistas')
 
-        const created = await AnalistaCollection.insertOne({cedula:data.Analista.numero_cedula,nombres:data.Analista.nombres_completos,grado:data.Analista.grado,ID_UNIDAD:data.Analista.id_unidad,ID_ZONA:data.Analista.id_zona})
+        const created = await AnalistaCollection.insertOne({cedula:data.numero_cedula,nombres:data.nombres_completos,grado:data.grado,ID_UNIDAD:data.ID_UNIDAD,ID_ZONA:data.ID_ZONA})
 
         return {
             create: created ? true : false
@@ -27,7 +27,7 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
     }
 
     async search_analista(numero_cedula: string): Promise<boolean> {
-        const AnalistaCollection = MongoHelper.getCollection('Analista')
+        const AnalistaCollection = MongoHelper.getCollection('Analistas')
         const query = new QueryBuilder()
         .match({
             numero_cedula:numero_cedula
@@ -38,7 +38,7 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
     }
 
     async get_analista_by_num_cl(numero_cedula: string): Promise<GetAnalistaByNumCl.Result> {
-        const AnalistaCollection = MongoHelper.getCollection('Analista')
+        const AnalistaCollection = MongoHelper.getCollection('Analistas')
         const query = new QueryBuilder()
         .match({
             cedula:numero_cedula
