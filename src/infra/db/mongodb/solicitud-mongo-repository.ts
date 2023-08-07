@@ -65,8 +65,6 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
   }
 
  async loadAll(accountId: string, skip: number, limit: number):Promise<LoadSolicitudesRepository.Result> {
-
-  console.log(accountId)
   const solicitudCollection = MongoHelper.getCollection('solicitud')
     const query = new QueryBuilder()
       .match({
@@ -122,6 +120,7 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
 
     const solicitud = await solicitudCollection.aggregate<SolicitudResult>(query).toArray()
     return solicitud.length ? solicitud[0] : null
+    // return MongoHelper.map(solicitud)
   }
 
   async checkById (id: string): Promise<boolean> {
