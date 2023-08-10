@@ -41,7 +41,11 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
     async create_analista(data: CreateAnalista.Params): Promise<CreateAnalista.Resutl> {
         const AnalistaCollection = MongoHelper.getCollection('Analistas')
 
-        const created = await AnalistaCollection.insertOne({cedula:data.numero_cedula,nombres:data.nombres_completos,grado:data.grado,ID_UNIDAD:new ObjectId(data.ID_UNIDAD),ID_ZONA:new ObjectId(data.ID_ZONA)})
+        const created = await AnalistaCollection.insertOne({
+            cedula:data.numero_cedula,nombres:data.nombres_completos,
+            grado:data.grado,ID_UNIDAD:new ObjectId(data.ID_UNIDAD),
+            ID_ZONA:new ObjectId(data.ID_ZONA)
+        })
 
         return {
             create: created ? true : false

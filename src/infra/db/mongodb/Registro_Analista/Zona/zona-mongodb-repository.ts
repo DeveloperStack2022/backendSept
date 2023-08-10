@@ -20,7 +20,7 @@ export class ZonaMongodbRepository implements CreateZona,SearchZona,AddUnidadToZ
     }
     async create_zona(data: CreateZona.Params): Promise<CreateZona.Result> {
         const ZonaCollection = MongoHelper.getCollection('Zonas')
-        const unidad = await ZonaCollection.insertOne({nombre_zona:data.numero_zona,IDS_UNIDADES:[data.id_unidad]})
+        const unidad = await ZonaCollection.insertOne({nombre_zona:data.numero_zona,IDS_UNIDADES:[new ObjectId(data.id_unidad)]})
         return {
             ...data,
             ids_unidades:[data.id_unidad],
@@ -32,7 +32,7 @@ export class ZonaMongodbRepository implements CreateZona,SearchZona,AddUnidadToZ
         const ZonaCollection = MongoHelper.getCollection('Zonas')
         await ZonaCollection.updateOne({_id: new ObjectId(id_zona)},{
             $push:{
-                IDS_UNIDADES:id_unidad
+                IDS_UNIDADES:new ObjectId(id_unidad)
             }
         })
     }

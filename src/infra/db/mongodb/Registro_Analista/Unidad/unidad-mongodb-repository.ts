@@ -43,6 +43,7 @@ export class UnidadMongodbRepository implements CreateUnidad,SearchUnidad,Update
 
     // Unidad 
     async create_unidad(data: CreateUnidad.Params): Promise<CreateUnidad.Result> {
+        console.log('Create Unidad',{...data})
         const UnidadCollection = MongoHelper.getCollection('Unidades')
         const unida_created_ = await UnidadCollection.insertOne({...data})
         return {
@@ -61,9 +62,9 @@ export class UnidadMongodbRepository implements CreateUnidad,SearchUnidad,Update
     async update_unidad(data: UpdateUnidad.Params): Promise<void> {
         const UnidadCollection = MongoHelper.getCollection('Unidades')
         await UnidadCollection.updateOne({ _id: new ObjectId(data.id)},{
-            $push:{'id_zonas':data.id_zonas},
+            $push:{'id_zonas': new ObjectId(data.id_zonas)},
             $set:{
-                'id_direccion':data.id_direccion
+                'id_direccion': new ObjectId(data.id_direccion)
             }
         })
     }
