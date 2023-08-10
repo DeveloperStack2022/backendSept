@@ -23,6 +23,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
 
   async loadBySurveyId (surveyId: string, accountId: string): Promise<LoadSurveyResultRepository.Result> {
     const surveyResultCollection = MongoHelper.getCollection('surveyResults')
+    
     const query = new QueryBuilder()
       .match({
         surveyId: new ObjectId(surveyId)
@@ -196,6 +197,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       })
       .build()
     const surveyResult = await surveyResultCollection.aggregate<SurveyResultModel>(query).toArray()
+    // console.log('Load Survey ID',surveyResult)
     return surveyResult.length ? surveyResult[0] : null
   }
 }

@@ -1,3 +1,6 @@
 export * from './get_analista'
 export * from './create_analista'
 export * from './get_analista_by_num_cl'
+export * from './db-load-analista-by-id'
+export * from './db-load-analista-by-id-unidad'
+export * from './db-load-unidad-with-zonas'

@@ -1,8 +1,8 @@
 import {MongoHelper,QueryBuilder} from '@/infra/db'
-import { CreateZona, SearchZona,AddUnidadToZone } from "@/data/protocols";
+import { CreateZona, SearchZona,AddUnidadToZone ,GetZonaById} from "@/data/protocols";
 import {ObjectId} from 'mongodb'
 
-export class ZonaMongodbRepository implements CreateZona,SearchZona,AddUnidadToZone {
+export class ZonaMongodbRepository implements CreateZona,SearchZona,AddUnidadToZone,GetZonaById {
     // Zona
     async search_zona(nombre_zona: SearchZona.Params): Promise<SearchZona.Result> {
         const ZonaCollection = MongoHelper.getCollection('Zonas')
@@ -35,5 +35,11 @@ export class ZonaMongodbRepository implements CreateZona,SearchZona,AddUnidadToZ
                 IDS_UNIDADES:id_unidad
             }
         })
+    }
+
+    async get_zona_by_id(id_zona: GetZonaById.Params): Promise<GetZonaById.Result> {
+        const ZonaCollection = MongoHelper.getCollection('Zonas')
+        const zona = await ZonaCollection.findOne({_id:new ObjectId(id_zona)})
+        return zona && MongoHelper.map(zona)
     }
 }

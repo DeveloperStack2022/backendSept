@@ -1,8 +1,30 @@
 import {MongoHelper,QueryBuilder} from '@/infra/db'
 import {ObjectId} from 'mongodb'
-import {GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl} from '@/data/protocols'
+import {GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl,Get_analista_by_id} from '@/data/protocols'
+import {GetAnalistaByIdUnidad} from '@/data/protocols'
 
-export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl {
+
+export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl,Get_analista_by_id,GetAnalistaByIdUnidad {
+
+    async get_analista_by_id_unidad(id_unidad: GetAnalistaByIdUnidad.Params): Promise<GetAnalistaByIdUnidad.Result> {
+        const AnalistaCollection = MongoHelper.getCollection('Analistas')
+        const analistas = await AnalistaCollection.find({
+            ID_UNIDAD: new ObjectId(id_unidad)
+        },
+        {
+            'projection':{
+                ID_UNIDAD:0,
+                ID_ZONA:0
+        }}).toArray()
+        return analistas.length ? MongoHelper.mapCollection(analistas) : null
+        
+    }
+
+    async get_analista_by_id(id: Get_analista_by_id.Params): Promise<Get_analista_by_id.Result> {
+        const AnalistaCollection = MongoHelper.getCollection('Analistas')
+        const analista = await AnalistaCollection.findOne({_id: new ObjectId(id)})
+        return analista && MongoHelper.map(analista)
+    }
 
     async get_analista(id_analista: GetAnalista.Params): Promise<GetAnalista.Result> {
         const AnlistaCollection = MongoHelper.getCollection('Analistas')
