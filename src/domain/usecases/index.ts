@@ -24,3 +24,6 @@ export * from './read-excels'
 
 // Registro Analistas 
 export * from './Registro_Analistas'
+
+// Resultados Apoyo Operativo 
+export * from './Resultados_Apoyo_Operativo'

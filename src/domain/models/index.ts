@@ -13,3 +13,6 @@ export * from './solicitud-by-numero'
 
 // Registros Analistas 
 export * from './Registro_Analistas'
+
+// Registro Apoyo Tecnico 
+export * from './Resultados'

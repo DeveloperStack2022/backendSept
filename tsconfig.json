@@ -4,14 +4,17 @@
     "module": "commonjs",
     "target": "es2019",
     "esModuleInterop": true,
+    "strict":false,
     "sourceMap": true,
     "rootDirs": ["src", "tests"],
     "baseUrl": "src",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports":true,
     "paths": {
       "@/tests/*": ["../tests/*"],
       "@/*": ["*"]
     }
   },
-  "include": ["src", "tests"],
+  "include": ["src"],
   "exclude": []
 }

@@ -22,3 +22,6 @@ export * from './excles-red'
 
 // Registro Analistas 
 export * from './Registro_Analistas'
+
+// Registro Apoyo Tecnico 
+export * from './Resultado_Apoyo_Tecnico'

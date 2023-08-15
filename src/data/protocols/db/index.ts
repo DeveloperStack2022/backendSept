@@ -10,3 +10,6 @@ export * from './solicitud_test'
 
 // Registr Analista 
 export * from './Registro_Analista'
+
+// Apoyo Tecnico 
+export * from './Resultados_Apoyo_Operativo'

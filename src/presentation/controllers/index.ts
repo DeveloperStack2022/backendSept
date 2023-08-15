@@ -17,3 +17,6 @@ export * from './excel'
 
 // Registro Analista 
 export * from './Registro_Analista'
+
+// Registro Apoyo Tecnico 
+export * from './Resgistro_Apoyo_Tecnico'

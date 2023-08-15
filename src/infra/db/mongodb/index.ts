@@ -13,3 +13,6 @@ export * from './solicitud_test-mongo-repository'
 
 // Registro Analista 
 export * from './Registro_Analista'
+
+// Apoyo Opertavo Tecnico
+export * from './Resultados_Apoyo_Operativo'
