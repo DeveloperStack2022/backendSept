@@ -24,6 +24,9 @@ export type SolicitudResult = {
   caso?: string
   evento?: string
   organizacion_delicuencial?: string
+  nombre_fiscal:string
+  nombre_fiscalia:string
+  tipo_solicitud:string
   // Relaciones
   solicitante_result: Solicitante
   celular: Celular[]

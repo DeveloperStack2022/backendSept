@@ -1,0 +1,1 @@
+export * from './resumen-caso-repository'
