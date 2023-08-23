@@ -1,6 +1,6 @@
 export type Vehiculo = {
-    tipo: string; // Motocicleta | Automovil | Camion | Trailer
-    cantidad: number;
+    id?:string
+    tipo: 'carro' | "motocicleta" | "avioneta" | "lancha"
     marca: string;
     modelo:string;
     placa:string;

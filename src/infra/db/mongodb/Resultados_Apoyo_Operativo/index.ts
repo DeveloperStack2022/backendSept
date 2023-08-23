@@ -1,3 +1,5 @@
 export * from './DatosGenerales'
 export * from './ResumenCaso'
 export * from './Detenido'
+export * from './Armas'
+export * from './Vehiculo'

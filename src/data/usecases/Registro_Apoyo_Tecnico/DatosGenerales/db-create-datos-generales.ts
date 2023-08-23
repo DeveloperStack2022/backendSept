@@ -7,7 +7,6 @@ export class DbCreateDatosGenerales implements CreateDatosGenerales {
     ){}
 
     async create_datos_generales(params: CreateDatosGenerales.Params): Promise<any> {
-        const datos_generales = await this.createDatosGeneralesRepo.create_datos_generales(params)        
-        console.log(datos_generales)
+        await this.createDatosGeneralesRepo.create_datos_generales(params)        
     }
 }

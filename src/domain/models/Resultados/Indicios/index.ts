@@ -1,4 +1,3 @@
-export * from './arma_blanca'
 export * from './armad_fuego'
 export * from './artefactos_electronicos'
 export * from './detenidos'
