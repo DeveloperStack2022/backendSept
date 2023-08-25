@@ -1,4 +1,5 @@
 export type Dinero = {
-    tipo_divisa: string;
+    id?:string;
+    tipo_divisa: 'pesos colombianos' | 'soles peruanos' | 'dolar americano';
     valor:string;
 }

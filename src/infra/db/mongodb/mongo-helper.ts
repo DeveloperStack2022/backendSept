@@ -20,7 +20,10 @@ export const MongoHelper = {
 
   map: (data: any): any => {
     const { _id, ...rest } = data
-    return { ...rest, id: _id.toHexString() }
+    if(_id != null ){
+      return { ...rest, id: _id.toHexString() }
+    }
+    return {...rest,id: _id}
   },
 
   mapCollection: (collection: any[]): any[] => {

@@ -1,13 +1,14 @@
 import { MongoHelper, QueryBuilder } from '@/infra/db'
-import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository } from '@/data/protocols/db'
+import { AddSolicitudRepository,LoadSolicitudesRepository,LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository,LoadAllSolictudesForDate } from '@/data/protocols/db'
 import {LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository,LoadSolicitudesNumeroCelularRepositoryI} from '@/data/protocols/db'
 import { ObjectId } from 'mongodb'
 import { AddManySolicitud, AddSolicitud } from '@/domain/usecases'
 import { SolicitudResult } from '@/domain/models'
+
 import moment from 'node-moment'
 
 
-export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository,LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository,LoadSolicitudesNumeroCelularRepositoryI {
+export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSolicitudesRepository, LoadSolicitudByIdRepository,CheckSolicitudByIdRepository,AddSolicitudManyRepository,LoadSolicitudByIpRepository,LoadsolicitudByCasoRepository,LoadSolicitudesNumeroCelularRepositoryI ,LoadAllSolictudesForDate{
   
   async add (data: AddSolicitud.Params): Promise<void> {
     const solicitudCollection = MongoHelper.getCollection('solicitud')
@@ -274,6 +275,93 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
       return MongoHelper.mapCollection(celulares)
   }
 
+  async load_solicitudes_for_date(date_start: Date, date_end: Date): Promise<LoadAllSolictudesForDate.Result> {
+    const solicitudCollection = MongoHelper.getCollection('solicitud')
+    console.log(date_start)
+    const query = new QueryBuilder()
+      .match({
+        'fecha':{
+          '$gte':date_start,//Inicio de la fecha
+          '$lt':date_end //End Fecha
+        }
+      })
+      .group({
+        _id:0,
+        "data":{
+          '$push': '$$ROOT'
+        }
+      })
+      .unwind({
+        path:'$data'
+      })
+      .lookup({
+        from:'solicitantes',
+        foreignField:'_id',
+        localField: 'data.solicitante',
+        as:'slcts'
+      })
+      .unwind({
+        path: '$slcts'
+      })
+      .lookup({
+        from:'celulares',
+        foreignField:'_id',
+        localField:'data.celular',
+        as:'cl'
+      })
+      .unwind({path:'$cl'})
+      .lookup({
+        from:'ubicacion',
+        foreignField:'_id',
+        localField:'data.ubicacion',
+        as: 'gps'
+      })
+      .unwind({path:'$gps'})
+      // .addFields({
+      //   accountId: {
+      //     $toObjectId:"$data.accountId"
+      //   }
+      // })
+      // .lookup({
+      //   from:'accountId',
+      //   localField:'accountId',
+      //   foreignField:'_id',
+      //   as: 'account'
+      // })
+      // .unwind({path:'$account'})
+      .group({
+        _id:{
+          hora:'$data.hora',
+          fecha:'$data.fecha',
+          grado: '$slcts.grado',
+          "nombres_completos":'$slcts.nombres_completos',
+          numero:'$cl.numero_celular',
+          unidad: '$slcts.unidad',
+          latitud: '$gps.latitud',
+          longitud: '$gps.longitud',
+          imsi: '$cl.imsi'
+        }
+      })
+      .project({
+        _id: null,
+        hora: '$_id.hora',
+        fecha:'$_id.fecha',
+        grado:'$_id.grado',
+        nombre_completos: '$_id.nombres_completos',
+        unidad: '$_id.unidad',
+        celular: '$_id.numero',
+        latitud: '$_id.latitud',
+        longitud: '$_id.longitud',
+        imsi:'$_id.imsi'
+      })
+      
+      .build()
+      
+      const solicitudes = await solicitudCollection.aggregate(query).toArray()
+      console.log( 'Solcitudes => ',JSON.stringify(solicitudes))
+      return MongoHelper.mapCollection(solicitudes)
+  }
+
 
   //  -----------------------------------------
 
@@ -345,3 +433,6 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
     },[])
   }
 }
+
+
+

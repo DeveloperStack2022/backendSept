@@ -45,6 +45,10 @@ export class QueryBuilder {
   project (data: object): QueryBuilder {
     return this.addStep('$project', data)
   }
+
+  addFields (data: object): QueryBuilder {
+    return this.addStep('$addFields', data)
+  }
   skip(data:number): QueryBuilder {
     return  this.addStepOther('$skip',data as number)
   }

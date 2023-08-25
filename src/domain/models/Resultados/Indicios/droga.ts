@@ -1,7 +1,7 @@
-export type SustanciasSujetasFiscalizacion = {
+export type SustanciasIlegales = {
     tipo:'Marihuana' | 'Cocaina' | 'Heroina' | 'Otros'
     otro_descripcion?:string;
-    peso:string;
+    peso:number;
     t_peso: 'kg' | 'gr'
     dir_logotipo:string // -> Url del file con el file_name '/uploads/foto_log'
     descripcion_logo:string; 

@@ -10,3 +10,4 @@ export * from './load-solicitud-by-ip-repository'
 export * from './load-solicitud-by-num_celular-repository'
 
 export * from './load-search-repository'
+export * from './load-all-solicitudes-for-date'

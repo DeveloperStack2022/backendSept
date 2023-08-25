@@ -1,7 +1,7 @@
 import {adaptRoute} from '@/main/adapters'
 // import {adaptMulter as multer} from '@/main/middlewares'
 // import {multer} from '@/main/middlewares'
-import {makeLoadExcelController,makeSaveExcelController} from '@/main/factories'
+import {makeLoadExcelController,makeSaveExcelController,makeGenerateExcelController} from '@/main/factories'
 // import {auth} from '@/main/middlewares'
 import {Router} from 'express'
 import multer from 'multer'
@@ -20,4 +20,5 @@ const storage = multer.diskStorage({
 export default (router:Router):void => {
     router.get('/read_excel',adaptRoute(makeLoadExcelController()))
     router.post('/uploadFile',multer({storage}).single('file'),adaptRoute(makeSaveExcelController()))
+    router.get('/download_excel',adaptRoute(makeGenerateExcelController()))
 }
