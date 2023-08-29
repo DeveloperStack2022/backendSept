@@ -6,5 +6,5 @@ export interface CreateDatosGenerales {
 
 export namespace CreateDatosGenerales {
     export type Params = DatosGenerales
-    export type Result = any
+    export type Result = string
 }

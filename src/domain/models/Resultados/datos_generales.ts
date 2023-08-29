@@ -1,5 +1,5 @@
 export type DatosGenerales =  {
-    numero_caso: string;
+    nombre_caso: string;
     zona:number;
     subzona:string;
     distrito:string;
@@ -13,4 +13,14 @@ export type DatosGenerales =  {
 type Cordenas = {
     latitud:string;
     longitud:string;
+}
+
+export type UpdateDatosGeneralesEntity = {
+    datosGenerales?: string;
+    resumenCaso?:string;
+    detenidos?:string[]
+    vehiculo?:string[]
+    armas?:string[]
+    dinero?:string[]
+    sustancias_sujetas_fiscalizacion?:string[]
 }

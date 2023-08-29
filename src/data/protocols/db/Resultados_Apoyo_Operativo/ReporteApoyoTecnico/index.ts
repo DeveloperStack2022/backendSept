@@ -1,0 +1,1 @@
+export * from './get-reporte-apoyo-tecnico'

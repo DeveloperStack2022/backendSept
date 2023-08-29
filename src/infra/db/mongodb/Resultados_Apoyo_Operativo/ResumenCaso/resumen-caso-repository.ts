@@ -12,10 +12,8 @@ export class ResumenCasoMongoRepository implements CreateResumenCaso {
         this.db = MongoHelper.getCollection('ApoyoTecnico_ResumenCaso')
     }
 
-    async create_resumen_caso(params: CreateResumenCaso.Params): Promise<any> {
-        this.db.insertOne({...params})
-        return {
-            'inserted': 'Inserted'
-        }
+    async create_resumen_caso(params: CreateResumenCaso.Params): Promise<CreateResumenCaso.Result> {
+        const id = (await this.db.insertOne({...params})).insertedId
+        return id.toHexString()
     }
 }

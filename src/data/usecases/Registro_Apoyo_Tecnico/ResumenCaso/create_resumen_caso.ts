@@ -7,7 +7,7 @@ export class DbCreateResumenCaso implements CreateResumenCaso {
     ){}
     
 
-    async create_resumen_caso(params: CreateResumenCaso.Params): Promise<any> {
-        await this.createResumenCasoRepo.create_resumen_caso(params)
+    async create_resumen_caso(params: CreateResumenCaso.Params): Promise<CreateResumenCaso.Result> {
+        return await this.createResumenCasoRepo.create_resumen_caso(params)
     }
 }

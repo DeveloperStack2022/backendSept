@@ -7,7 +7,7 @@ export class DbCreateDetenido implements CreateDetenido {
         private readonly createDetenidoRepo: CreateDetenidoRepo
     ){}
 
-    async create_detenido(params: CreateDetenido.Params): Promise<any> {
-        const datos_detenido = await this.createDetenidoRepo.create_detenido(params)
+    async create_detenido(params: CreateDetenido.Params): Promise<CreateDetenido.Result> {
+        return await this.createDetenidoRepo.create_detenido(params)
     }
 }

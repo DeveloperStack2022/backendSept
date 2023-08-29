@@ -1,7 +1,8 @@
-import { makeAddRegistroApoyoTecnico } from '@/main/factories'
+import { makeAddRegistroApoyoTecnico,makeGetReportesApoyoTecnico } from '@/main/factories'
 import { adaptRoute } from '@/main/adapters'
 import { Router } from 'express'
 
 export default (router: Router): void => {
   router.post('/registroApoyoTecnico', adaptRoute(makeAddRegistroApoyoTecnico()))
+  router.get('/getApoyoTecnico',adaptRoute(makeGetReportesApoyoTecnico()))
 }

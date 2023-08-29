@@ -5,6 +5,6 @@ export interface CreateDetenido {
 }
 
 export namespace CreateDetenido {
-    export type Params = Detenidos
-    export type Result = any
+    export type Params = Detenidos[]
+    export type Result = string[]
 }

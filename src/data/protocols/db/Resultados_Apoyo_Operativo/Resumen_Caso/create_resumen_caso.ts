@@ -5,5 +5,5 @@ export interface CreateResumenCaso {
 
 export namespace CreateResumenCaso {
     export type Params = ResumenCaso
-    export type Result = any
+    export type Result = string
 } 
