@@ -36,11 +36,18 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             const query = new QueryBuilder()
             .project({
                 nombre_caso:1,
-                unidad_ejecotoria:1
+                unidad_ejecotoria:1,
+                n_detenidos:{
+                    '$cond':{
+                        if:{'$isArray':'$id_detenidos'},
+                        then:{'$size':'$id_detenidos'},
+                        else: "0"
+                    }
+                },
+                unidad_ejecutoria:1
             })
             .build()
             const reporte = await this.db.aggregate<GetReporteApoyoTecnico.Result>(query).toArray()
-            console.log(reporte)
             return MongoHelper.mapCollection(reporte)
         } catch (error) {
             console.log(error)
