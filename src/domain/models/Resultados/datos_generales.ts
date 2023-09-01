@@ -6,7 +6,7 @@ export type DatosGenerales =  {
     direccion:string;
     coordenadas:Cordenas,
     unidad_ejecutoria:string;
-    fecha:any;
+    fecha:Date;
     hora:string;
 }
 

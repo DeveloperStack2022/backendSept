@@ -62,7 +62,15 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
 
             }
             if(request.sustancias_sujetas_fiscalizacion.length  > 0) {
-                const created_sustancias_Ilegales = await this.addSustanciasIlegales.create_sustancias_ilegales(request.sustancias_sujetas_fiscalizacion)
+                console.log(request.sustancias_sujetas_fiscalizacion)
+                // TODO: Transform Data 
+                const transform = request.sustancias_sujetas_fiscalizacion.map(item => {
+                    return {
+                        ...item,
+                        peso_kg: item.medida_peso == ('gr' || 'Gr') ? item.peso_neto / 100 : item.medida_peso
+                    }
+                })
+                const created_sustancias_Ilegales = await this.addSustanciasIlegales.create_sustancias_ilegales(transform)
                 ids_Docs = {
                     ...ids_Docs,
                     sustancias_sujetas_fiscalizacion: []

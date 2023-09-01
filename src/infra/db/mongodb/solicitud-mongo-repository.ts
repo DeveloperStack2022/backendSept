@@ -317,18 +317,6 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
         as: 'gps'
       })
       .unwind({path:'$gps'})
-      // .addFields({
-      //   accountId: {
-      //     $toObjectId:"$data.accountId"
-      //   }
-      // })
-      // .lookup({
-      //   from:'accountId',
-      //   localField:'accountId',
-      //   foreignField:'_id',
-      //   as: 'account'
-      // })
-      // .unwind({path:'$account'})
       .group({
         _id:{
           hora:'$data.hora',
@@ -358,7 +346,6 @@ export class SolicitudMongoRepository implements AddSolicitudRepository,LoadSoli
       .build()
       
       const solicitudes = await solicitudCollection.aggregate(query).toArray()
-      console.log( 'Solcitudes => ',JSON.stringify(solicitudes))
       return MongoHelper.mapCollection(solicitudes)
   }
 
