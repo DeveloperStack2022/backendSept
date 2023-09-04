@@ -10,6 +10,7 @@ export const adaptMiddlewareMulter = (middleware:Middleware) => {
             ...(req.headers || {})
         }
         const httpResponse = await middleware.handle(request)
+
         const storage = multer.diskStorage({
             destination: (req,file,cb) => {
                 cb(null,'/tmp/my-uploads')

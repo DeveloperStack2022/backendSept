@@ -8,6 +8,7 @@ export type DatosGenerales =  {
     unidad_ejecutoria:string;
     fecha:Date;
     hora:string;
+    image_anexo?:string;
 }
 
 type Cordenas = {

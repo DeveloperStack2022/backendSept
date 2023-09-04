@@ -38,4 +38,4 @@ import {makeMulterMiddleware} from '@/main/factories'
 // }
 
 
-export const multer = adaptMiddleware(makeMulterMiddleware())
+export const multer = adaptMiddleware(makeMulterMiddleware('upload_anexo'))
