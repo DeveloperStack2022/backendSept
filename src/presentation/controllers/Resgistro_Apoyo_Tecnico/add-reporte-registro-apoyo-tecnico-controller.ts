@@ -66,7 +66,6 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
 
             }
             if(request_data.sustancias_sujetas_fiscalizacion.length  > 0) {
-                console.log(request_data.sustancias_sujetas_fiscalizacion)
                 // TODO: Transform Data 
                 const transform = request_data.sustancias_sujetas_fiscalizacion.map(item => {
                     return {
@@ -80,12 +79,13 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
                     sustancias_sujetas_fiscalizacion: []
                 }
             }
-            // console.log(ids_Docs)
+            console.log(ids_Docs)
 
             // Proceso Add Ids De las Relaciones 
             // Add New Ids 
-            this.updateRegistroApoyoTecnico.update_datos_generales(ids_Docs)
-
+            
+            const result = await this.updateRegistroApoyoTecnico.update_datos_generales(ids_Docs)
+            console.log(result)
             return ok({'data':'created'})
         } catch (error) {
             console.log(error)

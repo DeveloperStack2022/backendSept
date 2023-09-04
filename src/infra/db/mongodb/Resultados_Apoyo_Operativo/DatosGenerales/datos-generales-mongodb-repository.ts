@@ -20,14 +20,15 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
         try {
             await this.db.updateOne({_id: new ObjectId(params.datosGenerales)},{
                 '$set':{
-                    'id_armas': params.armas.map(item => new ObjectId(item)),
+                    'id_armas': params.hasOwnProperty('armas') ? params.armas.map(item => new ObjectId(item)) : [],
                     'id_detenidos': params.detenidos.map(item => new ObjectId(item)),
-                    'id_vehiculos':params.vehiculo.map(item => new ObjectId(item)),
+                    'id_vehiculos': params.hasOwnProperty('vehiculo')  ? params.vehiculo.map(item => new ObjectId(item)) : [],
                     'id_resumen_caso':new ObjectId(params.resumenCaso),
                 }      
             })
             return true
         } catch (error) {
+            console.log(error)
             return false
         }
     }
@@ -84,6 +85,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'id_detendidos':'$id_detenidos',
                     'id_armas':'$id_armas',
                     'id_vehiculos':'$id_vehiculos',
+                    "name_image":'$image_anexo'
                 }   
             })
             .project({
@@ -95,6 +97,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                 'longitud':'$_id.longitud',
                 'delito':"$_id.delito",
                 'contexto':'$_id.contexto',
+                'name_image':'$_id.name_image',
                 "detenidos":{
                     '$cond':{
                         if:{'$isArray':'$_id.id_detendidos'},
@@ -121,7 +124,6 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             })
             .build()
             const reporte_by_id = await this.db.aggregate<GetReporteApoyoTecnicoById.Result>(query).toArray()
-            console.log(reporte_by_id)
             const data = MongoHelper.mapCollection(reporte_by_id)
             return data.length > 0 ? data[0] : null
         } catch (error) {
