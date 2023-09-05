@@ -21,7 +21,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             await this.db.updateOne({_id: new ObjectId(params.datosGenerales)},{
                 '$set':{
                     'id_armas': params.hasOwnProperty('armas') ? params.armas.map(item => new ObjectId(item)) : [],
-                    'id_detenidos': params.detenidos.map(item => new ObjectId(item)),
+                    'id_detenidos':params.hasOwnProperty('detenidos') ? params.detenidos.map(item => new ObjectId(item)): [],
                     'id_vehiculos': params.hasOwnProperty('vehiculo')  ? params.vehiculo.map(item => new ObjectId(item)) : [],
                     'id_resumen_caso':new ObjectId(params.resumenCaso),
                 }      
