@@ -2,7 +2,7 @@ import { Controller, HttpResponse } from "@/presentation/protocols";
 import {serverError,ok} from '@/presentation/helpers'
 
 import {DatosGenerales,ResumenCaso,Detenidos,Arma, Vehiculo, Dinero,SustanciasIlegales} from '@/domain/models'
-import {CreateDatosGenerales,CreateResumenCaso,CreateDetenido,CreateArmas,CreateVehiculos, CreateDinero,CreateSustanciasIlegales,UpdateDatosGenerales} from '@/domain/usecases'
+import {CreateDatosGenerales,CreateResumenCaso,CreateDetenido,CreateArmas,CreateVehiculos, CreateDinero,CreateSustanciasIlegales,UpdateDatosGenerales,CreateMuniciones} from '@/domain/usecases'
 
 export class AddReporteRegistroApoyoTecnico implements Controller {
     constructor(
@@ -13,13 +13,15 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
         private readonly addVehiculo: CreateVehiculos,
         private readonly addDinero: CreateDinero,
         private readonly addSustanciasIlegales: CreateSustanciasIlegales,
-        private readonly updateRegistroApoyoTecnico:UpdateDatosGenerales
+        private readonly updateRegistroApoyoTecnico:UpdateDatosGenerales,
+        private readonly addMuniciones: CreateMuniciones
     ){}
             
     async handle(request: any): Promise<HttpResponse>  {
         // console.log(request.imageAnexo)
         const request_data = JSON.parse(request.data)
-        
+        console.log(request_data)
+              
         try {
             
             let ids_Docs:AddReporteRegistroApoyoTecnico.IDS = {}
@@ -61,10 +63,11 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
                 const created_dinero = await this.addDinero.create_dinero(request_data.dinero)
                 ids_Docs = {
                     ...ids_Docs,
-                    dinero: []
+                    dinero: created_dinero
                 }
 
             }
+
             if(request_data.sustancias_sujetas_fiscalizacion.length  > 0) {
                 // TODO: Transform Data 
                 const transform = request_data.sustancias_sujetas_fiscalizacion.map(item => {
@@ -76,16 +79,20 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
                 const created_sustancias_Ilegales = await this.addSustanciasIlegales.create_sustancias_ilegales(transform)
                 ids_Docs = {
                     ...ids_Docs,
-                    sustancias_sujetas_fiscalizacion: []
+                    sustancias_sujetas_fiscalizacion: created_sustancias_Ilegales
                 }
             }
-            console.log(ids_Docs)
-
-            // Proceso Add Ids De las Relaciones 
-            // Add New Ids 
+           
+            if(request_data.municiones.length > 0 ){
+                const ids_string = await this.addMuniciones.create_municiones(request_data.municiones)
+                ids_Docs = {
+                    ...ids_Docs,
+                    municiones: ids_string
+                }
+            }
             
-            const result = await this.updateRegistroApoyoTecnico.update_datos_generales(ids_Docs)
-            console.log(result)
+            await this.updateRegistroApoyoTecnico.update_datos_generales(ids_Docs)
+           
             return ok({'data':'created'})
         } catch (error) {
             console.log(error)
@@ -114,6 +121,7 @@ export namespace AddReporteRegistroApoyoTecnico {
         vehiculo?:string[]
         armas?:string[]
         dinero?:string[]
+        municiones?:string[]
         sustancias_sujetas_fiscalizacion?:string[]
     }
 }

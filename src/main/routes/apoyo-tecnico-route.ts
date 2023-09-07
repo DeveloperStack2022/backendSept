@@ -16,7 +16,7 @@ const whitelist = [
 
 const storage = multer.diskStorage({
   destination: (req,file,cb) => {
-      cb(null,path.join(__dirname,'../../Upload_Anexos'))
+      cb(null,path.join(__dirname,'../../../src/Upload_Anexos'))
   },
   filename:  (req, file, cb) => {
       cb(null, uuId + "." + file.originalname.split('.')[1].toLowerCase());

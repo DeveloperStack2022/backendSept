@@ -23,5 +23,6 @@ export type UpdateDatosGeneralesEntity = {
     vehiculo?:string[]
     armas?:string[]
     dinero?:string[]
+    municiones?:string[]
     sustancias_sujetas_fiscalizacion?:string[]
 }

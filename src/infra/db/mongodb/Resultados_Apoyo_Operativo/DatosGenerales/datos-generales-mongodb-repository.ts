@@ -16,6 +16,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
         const id = (await this.db.insertOne({...params,fecha: new Date(params.fecha)})).insertedId
         return id.toHexString()
     }
+
     async update_datos_generales(params: UpdateDatosGenerales.Params): Promise<boolean> {
         try {
             await this.db.updateOne({_id: new ObjectId(params.datosGenerales)},{
@@ -24,6 +25,8 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'id_detenidos':params.hasOwnProperty('detenidos') ? params.detenidos.map(item => new ObjectId(item)): [],
                     'id_vehiculos': params.hasOwnProperty('vehiculo')  ? params.vehiculo.map(item => new ObjectId(item)) : [],
                     'id_resumen_caso':new ObjectId(params.resumenCaso),
+                    'id_sustancias_ilegales': params.hasOwnProperty('sustancias_sujetas_fiscalizacion') ? params.sustancias_sujetas_fiscalizacion.map(item => new ObjectId(item)) : [],
+                    'id_dinero': params.hasOwnProperty('dinero') ? params.dinero.map(item => new ObjectId(item)) : [],
                 }      
             })
             return true
@@ -72,6 +75,12 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             .unwind({
                 path: '$ResumenCaso'
             })
+            .lookup({
+                from:'ApoyoTecnico_SustanciasIlegales',
+                foreignField: '_id',
+                localField: 'id_sustancias_ilegales',
+                as:'SustanciasIlegales'
+            })
             .group({
                 "_id":{
                     "_id":"$_id",
@@ -85,6 +94,9 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'id_detendidos':'$id_detenidos',
                     'id_armas':'$id_armas',
                     'id_vehiculos':'$id_vehiculos',
+                    'id_dinero':'$id_dinero',
+                    'id_sustancias_ilegales':'$id_sustancias_ilegales',
+                    'SustanciasIlegales':'$SustanciasIlegales',
                     "name_image":'$image_anexo'
                 }   
             })
@@ -118,6 +130,14 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                             if:{'$isArray':'$_id.id_vehiculos'},
                             then:{'$size':'$_id.id_vehiculos'},
                             else: 0
+                        }
+                    },
+                    'SustanciasIlegales':'$_id.SustanciasIlegales',
+                    'Dinero':{
+                        '$cond':{
+                            if: {'$isArray':'$_id.id_dinero'},
+                            then:{'$size':'$_id.id_dinero'},
+                            else:0
                         }
                     }
                 }
