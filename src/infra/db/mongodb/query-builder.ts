@@ -41,6 +41,9 @@ export class QueryBuilder {
   lookup (data: object): QueryBuilder {
     return this.addStep('$lookup', data)
   }
+  set(data:object): QueryBuilder {
+    return this.addStep('$set',data)
+  }
 
   project (data: object): QueryBuilder {
     return this.addStep('$project', data)

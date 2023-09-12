@@ -1,10 +1,11 @@
 import {MongoHelper,QueryBuilder} from '@/infra/db'
 import {ObjectId} from 'mongodb'
 import {GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl,Get_analista_by_id} from '@/data/protocols'
-import {GetAnalistaByIdUnidad} from '@/data/protocols'
+import {GetAnalistaByIdUnidad,GetAnalistaByGrado} from '@/data/protocols'
 
 
-export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl,Get_analista_by_id,GetAnalistaByIdUnidad {
+
+export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,SearchAnalista,GetAnalistaByNumCl,Get_analista_by_id,GetAnalistaByIdUnidad,GetAnalistaByGrado {
 
     async get_analista_by_id_unidad(id_unidad: GetAnalistaByIdUnidad.Params): Promise<GetAnalistaByIdUnidad.Result> {
         const AnalistaCollection = MongoHelper.getCollection('Analistas')
@@ -133,4 +134,72 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
         // return analista && MongoHelper.map(analista)
     }
     
+    async get_analista_by_grado(params: string): Promise<GetAnalistaByGrado.Result> {
+        try {
+            const AnalistaCollection = MongoHelper.getCollection('Analistas')
+            const query = new QueryBuilder()
+            .match({
+                'grado':params
+            })
+            .lookup({
+                from: 'Unidades',
+                foreignField:'_id',
+                localField:'ID_UNIDAD',
+                pipeline:[{
+                    '$project':{
+                        'id_zonas':0
+                    }
+                }],
+                as:'unidad',
+            })
+            .unwind({
+                path:'$unidad'
+            })
+            .lookup({
+                from:'Direcciones',
+                // Variable en Mongodb
+                let:{
+                    'unidadName':{
+                        '$toString':{"$toString":"$unidad._id"}
+                    }
+                },
+                pipeline:[{
+                    '$match':{
+                        '$expr':{
+                            "$in":[
+                                "$$unidadName","$IDS_UNIDADES"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "$project": {
+                        IDS_UNIDADES: 0,
+                        _id: 0
+                    }
+                }],
+                
+                as:'direccion'
+            })
+            .unwind({
+                path: '$direccion'
+            })
+            .lookup({
+                from:'Zonas',
+                foreignField:'_id',
+                localField:'ID_ZONA',
+                as:'zona'
+            })
+            .unwind({
+                path:'$zona'
+            })
+            .build()
+            const result_aggregate = await  AnalistaCollection.aggregate<GetAnalistaByGrado.Result>(query).toArray()
+            return  MongoHelper.mapCollection(result_aggregate)
+            
+        } catch (error) {
+            return null
+        }
+    }
+
 }

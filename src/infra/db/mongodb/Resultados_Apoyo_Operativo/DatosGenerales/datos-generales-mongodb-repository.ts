@@ -27,6 +27,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'id_resumen_caso':new ObjectId(params.resumenCaso),
                     'id_sustancias_ilegales': params.hasOwnProperty('sustancias_sujetas_fiscalizacion') ? params.sustancias_sujetas_fiscalizacion.map(item => new ObjectId(item)) : [],
                     'id_dinero': params.hasOwnProperty('dinero') ? params.dinero.map(item => new ObjectId(item)) : [],
+                    'id_municiones':params.hasOwnProperty('municiones') ? params.municiones.map(item => new ObjectId(item)) : []
                 }      
             })
             return true
@@ -81,6 +82,12 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                 localField: 'id_sustancias_ilegales',
                 as:'SustanciasIlegales'
             })
+            .lookup({
+                from:'ApoyoTecnico_Municiones',
+                foreignField: '_id',
+                localField: 'id_municiones',
+                as:'Municiones'
+            })
             .group({
                 "_id":{
                     "_id":"$_id",
@@ -97,8 +104,20 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'id_dinero':'$id_dinero',
                     'id_sustancias_ilegales':'$id_sustancias_ilegales',
                     'SustanciasIlegales':'$SustanciasIlegales',
-                    "name_image":'$image_anexo'
-                }   
+                    'id_municiones':'$id_municiones',
+                    "name_image":'$image_anexo',
+                    "municiones": '$Municiones',
+                    'municiones_transform':{
+                        '$map':{
+                            'input':'$Municiones',
+                            'as':'municiones_int',
+                            'in':{
+                                '_id':'$$municiones_int._id',
+                                'cantidad':{'$toInt':'$$municiones_int.cantidad'}
+                            }
+                        }
+                    },
+                }
             })
             .project({
                 '_id':'$_id._id',
@@ -139,8 +158,12 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                             then:{'$size':'$_id.id_dinero'},
                             else:0
                         }
-                    }
-                }
+                    },
+                    'municiones':{
+                        '$sum':'$_id.municiones_transform.cantidad'
+                    },
+                },
+                  
             })
             .build()
             const reporte_by_id = await this.db.aggregate<GetReporteApoyoTecnicoById.Result>(query).toArray()
@@ -161,53 +184,84 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                 '$lt':params.date_end
             }
         })
+        .lookup({
+            from:'ApoyoTecnico_Municiones',
+            foreignField: '_id',
+            localField: 'id_municiones',
+            as:'Municiones'
+        })
+        .lookup({
+            from:'ApoyoTecnico_SustanciasIlegales',
+            foreignField: '_id',
+            localField: 'id_sustancias_ilegales',
+            as:'SustanciasIlegales'
+        })
         .group({
-            "_id":{
-                "_id":'$_id',
-                'id_detendidos':'$id_detenidos',
+            _id:{
+                '_id':'$_id',
+                'id_detenidos':'$id_detenidos',
                 'id_armas':'$id_armas',
                 'id_vehiculos':'$id_vehiculos',
-            }  
-        }) 
-        .project({
-            "_id":"$_id._id",
-            "total_detenidos":{
-                '$cond':{
-                    if:{'$isArray':'$_id.id_detendidos'},
-                    then:{'$size':'$_id.id_detendidos'},
-                    else: 0
-                }
-            },
-            'total_armas':{
-                '$cond':{
-                    if:{'$isArray':'$_id.id_armas'},
-                    then:{'$size':'$_id.id_armas'},
-                    else: 0
-                }
-            },
-            'total_vehiculos':{
-                '$cond':{
-                    if:{'$isArray':'$_id.id_vehiculos'},
-                    then:{'$size':'$_id.id_vehiculos'},
-                    else: 0
-                }
+                'municiones_transform':{
+                    '$map':{
+                        'input':'$Municiones',
+                        'as':'municiones_int',
+                        'in':{
+                            '_id':'$$municiones_int._id',
+                            'cantidad':{'$toInt':'$$municiones_int.cantidad'}
+                        }
+                    }
+                },
+                'sustancias_ilegales':'$SustanciasIlegales'
             }
         })
         .group({
-           _id: null,
-            total_detenidos: {'$sum':'$total_detenidos'},
-            total_armas:{'$sum':'$total_armas'},
-            total_vehiculos:{'$sum':'$total_vehiculos'}
+            '_id':'$_id._id',
+            'total_municiones':{'$first':{'$sum':'$_id.municiones_transform.cantidad'}},
+            'total_sustancias_ilegales':{'$first':{'$sum':'$_id.sustancias_ilegales.peso_kg'}},
+            'total_detenidos':{'$first':'$_id.id_detenidos'},
+            'total_armas':{'$first':'$_id.id_armas'},
+            'total_vehiculos':{'$first':'$_id.id_vehiculos'},
         })
         .project({
-            total_detendios:'$total_detenidos',
-            total_armas: '$total_armas',
-            total_vehiculos:'$total_vehiculos'
+            '_id':'$_id',
+            'total_municiones':{'$sum':'$total_municiones'},
+            'total_sustancias_ilegales':{'$sum':'$total_sustancias_ilegales'},
+            "total_detenidos":{
+                '$cond':{
+                    if:{'$isArray':'$total_detenidos'},
+                    then:{'$size':'$total_detenidos'},
+                    else: 0
+                }
+            },
+            "total_armas":{
+                '$cond':{
+                    if:{'$isArray':'$total_armas'},
+                    then:{'$size':'$total_armas'},
+                    else: 0
+                }
+            },
+            "total_vehiculos":{
+                '$cond':{
+                    if:{'$isArray':'$total_vehiculos'},
+                    then:{'$size':'$total_vehiculos'},
+                    else: 0
+                }
+            },
+        })
+        .group({
+            '_id':null,
+            'total_municiones':{'$sum':'$total_municiones'},
+            'total_sustancias_ilegales':{'$sum':'$total_sustancias_ilegales'},
+            'total_detenidos':{'$sum':'$total_detenidos'},
+            'total_armas':{'$sum':'$total_armas'},
+            'total_vehiculos':{'$sum':'$total_vehiculos'}
         })
         .build()
 
         let totales = await this.db.aggregate<GetResultsByRangeDate.Result>(query).toArray()
         totales = MongoHelper.mapCollection(totales)
+        console.log(totales)
         return totales.length > 0 ? totales[0] : null
         
     }   

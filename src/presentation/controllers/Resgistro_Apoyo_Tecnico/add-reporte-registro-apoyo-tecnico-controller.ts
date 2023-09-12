@@ -20,7 +20,7 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
     async handle(request: any): Promise<HttpResponse>  {
         // console.log(request.imageAnexo)
         const request_data = JSON.parse(request.data)
-        console.log(request_data)
+      
               
         try {
             
@@ -73,7 +73,7 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
                 const transform = request_data.sustancias_sujetas_fiscalizacion.map(item => {
                     return {
                         ...item,
-                        peso_kg: item.medida_peso == ('gr' || 'Gr') ? item.peso_neto / 100 : item.medida_peso
+                        peso_kg: item.medida_peso == ('gr' || 'Gr') ? item.peso_neto / 1000 : parseInt(item.medida_peso)
                     }
                 })
                 const created_sustancias_Ilegales = await this.addSustanciasIlegales.create_sustancias_ilegales(transform)

@@ -37,4 +37,5 @@ export default (router: Router): void => {
   router.get('/getApoyoTecnico',adaptRoute(makeGetReportesApoyoTecnico()))
   router.get('/getApoyoTecnicoId/:id',adaptRoute(makeGetReporteApoyoTecnicoById()))
   router.get('/getResultByRangeDate',adaptRoute(makeGetResultsByRangeDate_()))
+  // router.get('/getResultByRangeDateYear',adaptRoute(makeGetResultsByRangeDate_()))
 }

@@ -1,9 +1,11 @@
 import { adaptResolver } from '@/main/adapters'
-import {makeGetAnalistaByNumeroCedulaControllerFactory } from '@/main/factories'
+import {makeGetAnalistaByNumeroCedulaControllerFactory,makeGetAnalistaByGradoControllerFactory } from '@/main/factories'
 
 export default {
   Query: {
-    getAnalistaByNumCl: async (parent: any, args: any, context: any) => adaptResolver(makeGetAnalistaByNumeroCedulaControllerFactory(), args, context)
+    getAnalistaByNumCl: async (parent: any, args: any, context: any) => adaptResolver(makeGetAnalistaByNumeroCedulaControllerFactory(), args, context),
+    // GetAnalista By Grado
+    getAnalistaByGrado: async (parent:any,args:any,context:any) => adaptResolver(makeGetAnalistaByGradoControllerFactory(),args,context)
   },
 
   Mutation: {

@@ -14,8 +14,9 @@ export type DataShowImage = {
     contexto:string; //TODO: Resumen Caso
     detenidos:number
     indicios: {
-        armas:number;
-        celulares:number
+        armas?:number;
+        celulares?:number
+        municiones?:number
     }
 }
 
