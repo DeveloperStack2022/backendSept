@@ -91,6 +91,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             .group({
                 "_id":{
                     "_id":"$_id",
+                    'tipo_operativo':'$tipo_operativo',
                     "ejecutor":'$unidad_ejecutoria',
                     'latitud':'$coordenadas.latitud',
                     'longitud':'$coordenadas.longitud',
@@ -107,6 +108,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'id_municiones':'$id_municiones',
                     "name_image":'$image_anexo',
                     "municiones": '$Municiones',
+                    'fecha':'$fecha',
                     'municiones_transform':{
                         '$map':{
                             'input':'$Municiones',
@@ -121,6 +123,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             })
             .project({
                 '_id':'$_id._id',
+                "tipo_operativo":'$_id.tipo_operativo',
                 'nombre_caso':'$_id.nombre_caso',
                 'ejecutor':'$_id.ejecutor',
                 'direccion':'$_id.direccion',
@@ -129,6 +132,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                 'delito':"$_id.delito",
                 'contexto':'$_id.contexto',
                 'name_image':'$_id.name_image',
+                'fecha':'$_id.fecha',
                 "detenidos":{
                     '$cond':{
                         if:{'$isArray':'$_id.id_detendidos'},
