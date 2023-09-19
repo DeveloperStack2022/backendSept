@@ -3,7 +3,8 @@ import {gql} from 'apollo-server-express'
 export default gql`
     extend type Query {
         getAnalistaByNumCl (numero_cedula:String!):AnlistaResult,
-        getAnalistaByGrado (grado:String!):Analistas
+        getAnalistaByGrado (grado:String!):Analistas,
+        getAnalistaByUnidad (nombre_unidad:String!):Analistas
     }
 
     type AnlistaResult {

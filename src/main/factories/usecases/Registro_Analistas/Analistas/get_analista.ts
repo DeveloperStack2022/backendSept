@@ -4,5 +4,5 @@ import {AnalistaMongoDbRepository} from '@/infra/db'
 
 export const makeDbGetAnalista = (): Get_Analista => {
     const repositoryAnalista = new AnalistaMongoDbRepository()
-    return new DbGetAnalista(repositoryAnalista) 
+    return new DbGetAnalista(repositoryAnalista) // Search Analista ByID 
 }

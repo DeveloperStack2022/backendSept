@@ -8,6 +8,7 @@ export type DatosGenerales =  {
     unidad_ejecutoria:string;
     fecha:Date;
     hora:string;
+    numero_reporte:number;
     image_anexo?:string;
 }
 

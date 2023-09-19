@@ -9,16 +9,59 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
 
     async get_analista_by_id_unidad(id_unidad: GetAnalistaByIdUnidad.Params): Promise<GetAnalistaByIdUnidad.Result> {
         const AnalistaCollection = MongoHelper.getCollection('Analistas')
-        const analistas = await AnalistaCollection.find({
-            ID_UNIDAD: new ObjectId(id_unidad)
-        },
-        {
-            'projection':{
-                ID_UNIDAD:0,
-                ID_ZONA:0
-        }}).toArray()
-        return analistas.length ? MongoHelper.mapCollection(analistas) : null
-        
+        // const analistas = await AnalistaCollection.find({
+        //     ID_UNIDAD: new ObjectId(id_unidad)
+        // },
+        // {
+        //     'projection':{
+        //         ID_UNIDAD:0,
+        //         ID_ZONA:0
+        // }}).toArray()
+        const query = new QueryBuilder()
+        .match({
+            'ID_UNIDAD': new ObjectId(id_unidad)
+        })
+        .lookup({
+            from: 'Unidades',
+            foreignField:'_id',
+            localField: 'ID_UNIDAD',
+            as:'unidad'
+        })
+        .unwind({
+            path:'$unidad'
+        })
+        .lookup({
+            from: 'Zonas',
+            foreignField:'_id',
+            localField:'unidad.id_zonas',
+            as:'zona'
+        })
+        .unwind({
+            path:'$zona'
+        })
+        .lookup({
+            from: 'Direcciones',
+            foreignField:'_id',
+            localField:'unidad.id_direccion',
+            as:'direccion'
+        })
+        .unwind({
+            path:'$direccion'
+        })
+
+        .project({
+            nombres:1,
+            cedula:1,
+            nombre:1,
+            grado:1,
+            unidad:1,
+            direccion:1,
+            zona:1
+        })
+        .build()
+        const data_ = await AnalistaCollection.aggregate<GetAnalistaByIdUnidad.Result>(query).toArray()
+        console.log('data => ',data_)
+        return MongoHelper.mapCollection(data_)
     }
 
     async get_analista_by_id(id: Get_analista_by_id.Params): Promise<Get_analista_by_id.Result> {
@@ -201,5 +244,7 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
             return null
         }
     }
+
+
 
 }
