@@ -13,6 +13,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
     }
 
     async create_datos_generales(params: CreateDatosGenerales.Params): Promise<CreateDatosGenerales.Result> {
+        console.log("params => " + JSON.stringify(params))
         const id = (await this.db.insertOne({...params,fecha: new Date(params.fecha)})).insertedId
         return id.toHexString()
     }
