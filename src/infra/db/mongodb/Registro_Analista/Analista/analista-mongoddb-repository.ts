@@ -33,7 +33,7 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
         .lookup({
             from: 'Zonas',
             foreignField:'_id',
-            localField:'unidad.id_zonas',
+            localField:'ID_ZONA',
             as:'zona'
         })
         .unwind({
@@ -48,7 +48,6 @@ export class AnalistaMongoDbRepository implements GetAnalista,CreateAnalista,Sea
         .unwind({
             path:'$direccion'
         })
-
         .project({
             nombres:1,
             cedula:1,

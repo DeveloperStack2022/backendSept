@@ -34,8 +34,6 @@ const fileFiler = (req,file,cb) => {
 
 
 export default (router: Router): void => {
-
-  
   router.post('/registroApoyoTecnico', multer({storage,fileFilter:fileFiler}).single('upload_anexo'), adaptRoute(makeAddRegistroApoyoTecnico()))
   router.get('/getApoyoTecnico',adaptRoute(makeGetReportesApoyoTecnico()))
   router.get('/getApoyoTecnicoId/:id',adaptRoute(makeGetReporteApoyoTecnicoById()))

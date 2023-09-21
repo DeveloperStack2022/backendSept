@@ -12,7 +12,6 @@ export class GetAnalistasByUnidad implements Controller  {
         try {
             const id_unidad = await this.getUnidadByNombre.get_unidad(request.nombre_unidad.toUpperCase())
             const analistas_by_unidad = await this.getAnalistaByUnidad.get_analista_by_id_unidad(id_unidad.id)
-            console.log(analistas_by_unidad)
             
             /**
                 type AnlistaResult {
