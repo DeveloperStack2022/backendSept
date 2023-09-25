@@ -27,9 +27,7 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
             let ids_Docs:AddReporteRegistroApoyoTecnico.IDS = {}
             request_data.DatosGenerales.image_anexo = request.imageAnexo
 
-            console.log('***** \n')
-            console.log(request_data.DatosGenerales.image_anexo)
-            console.log('***** \n')
+            
 
             // TODO: Schema General
             const datos = await this.addRegistroApoyoTecnico.create_datos_generales(request_data.DatosGenerales)
