@@ -202,7 +202,8 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
 
     async get_results_by_range_date(params: GetResultsByRangeDate.Params): Promise<GetResultsByRangeDate.Result> {
         console.log({start_date:params.date_start,end_date:params.date_end })
-        const query = new QueryBuilder()
+        try {
+            const query = new QueryBuilder()
         .match({
             fecha:{
                 '$gte':params.date_start,
@@ -296,5 +297,9 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             total_vehiculos:0
         }
         
+        } catch (error) {
+            console.log('Aqui esta el error ')
+            console.log(error)    
+        }
     }   
 }
