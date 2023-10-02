@@ -200,7 +200,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
     }
 
     async get_results_by_range_date(params: GetResultsByRangeDate.Params): Promise<GetResultsByRangeDate.Result> {
-
+        console.log({start_date:params.date_start,end_date:params.date_end })
         const query = new QueryBuilder()
         .match({
             fecha:{
@@ -286,7 +286,14 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
         let totales = await this.db.aggregate<GetResultsByRangeDate.Result>(query).toArray()
         totales = MongoHelper.mapCollection(totales)
        
-        return totales.length > 0 ? totales[0] : null
+        return totales.length > 0 ? totales[0] : {
+            total_armas:0,
+            total_detenidos:0,
+            total_dinero:0,
+            total_sustancia_ilegales:0,
+            total_municiones:0,
+            total_vehiculos:0
+        }
         
     }   
 }
