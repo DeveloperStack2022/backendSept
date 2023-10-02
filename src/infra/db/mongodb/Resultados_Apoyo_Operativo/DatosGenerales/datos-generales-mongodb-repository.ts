@@ -38,9 +38,21 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
         }
     }
 
-    async get_reporte_Apoyo_Tecnico(): Promise<GetReporteApoyoTecnico.Result> {
+    async get_reporte_Apoyo_Tecnico(params:GetReporteApoyoTecnico.Params ): Promise<GetReporteApoyoTecnico.Result> {
         try {
+            const query_first = new QueryBuilder()
+            .group({
+                _id:null,
+                totalDocuments:{$sum:1}
+            })
+            .build()
+            // Execute Query First 
+            const count_documents = await this.db.aggregate<{_id:null,totalDocuments:number}[]>(query_first).toArray()
+            const objectTotalDocuments = MongoHelper.mapCollection(count_documents)
+            
             const query = new QueryBuilder()
+            .skip(params.skip)
+            .limit(params.limit)
             .project({
                 nombre_caso:1,
                 unidad_ejecotoria:1,
@@ -56,7 +68,10 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             })
             .build()
             const reporte = await this.db.aggregate<GetReporteApoyoTecnico.Result>(query).toArray()
-            return MongoHelper.mapCollection(reporte)
+            return{
+                DataShowTable:  MongoHelper.mapCollection(reporte),
+                total_documents: objectTotalDocuments[0].totalDocuments
+            }
         } catch (error) {
             console.log(error)
         }
@@ -270,7 +285,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
 
         let totales = await this.db.aggregate<GetResultsByRangeDate.Result>(query).toArray()
         totales = MongoHelper.mapCollection(totales)
-        console.log(totales)
+       
         return totales.length > 0 ? totales[0] : null
         
     }   

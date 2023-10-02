@@ -7,13 +7,21 @@ export class GetRegistroApoyoTecnico implements Controller {
         private readonly get_reporteApoyoTecnico: GetReporteApoyoTecnico
     ){}
 
-    async handle(request: any):Promise<HttpResponse> {
+    async handle(request: GetRegistroApoyoTecnico.Request):Promise<HttpResponse> {
         try {
-            const data = await this.get_reporteApoyoTecnico.get_reporte_apoyo_tecnico()
-            return data.length > 0 ?  ok(data) : noContent()
+            // console.log(request)
+            const data = await this.get_reporteApoyoTecnico.get_reporte_apoyo_tecnico({limit:parseInt(request.limit),skip:parseInt(request.skip)})
+            return data.DataShowTable.length > 0 ?  ok(data) : noContent()
         } catch (error) {
             serverError(error)
         }
+    }
+}
+
+export namespace GetRegistroApoyoTecnico {
+    export type Request = {
+        skip:string;
+        limit:string;
     }
 }
 
