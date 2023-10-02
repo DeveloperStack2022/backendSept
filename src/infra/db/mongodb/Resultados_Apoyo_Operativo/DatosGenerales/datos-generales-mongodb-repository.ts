@@ -73,6 +73,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                 total_documents: objectTotalDocuments[0].totalDocuments
             }
         } catch (error) {
+            console.log('Aqui esta el Error')
             console.log(error)
         }
     }
