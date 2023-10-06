@@ -25,3 +25,5 @@ export * from './Registro_Analistas'
 
 // Registro Apoyo Tecnico 
 export * from './Resultado_Apoyo_Tecnico'
+
+export * from './Prae'

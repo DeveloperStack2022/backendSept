@@ -27,3 +27,6 @@ export * from './Registro_Analistas'
 
 // Resultados Apoyo Operativo 
 export * from './Resultados_Apoyo_Operativo'
+
+// Registro Prae 
+export * from './Prae'

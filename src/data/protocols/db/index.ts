@@ -13,3 +13,5 @@ export * from './Registro_Analista'
 
 // Apoyo Tecnico 
 export * from './Resultados_Apoyo_Operativo'
+// Registro Prae 
+export * from './Prae'

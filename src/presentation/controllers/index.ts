@@ -20,3 +20,6 @@ export * from './Registro_Analista'
 
 // Registro Apoyo Tecnico 
 export * from './Resgistro_Apoyo_Tecnico'
+
+// Registro Prae 
+export * from './prae'

@@ -16,3 +16,6 @@ export * from './Registro_Analista'
 
 // Apoyo Opertavo Tecnico
 export * from './Resultados_Apoyo_Operativo'
+
+// PRAE
+export * from './prae-mongo-repository'

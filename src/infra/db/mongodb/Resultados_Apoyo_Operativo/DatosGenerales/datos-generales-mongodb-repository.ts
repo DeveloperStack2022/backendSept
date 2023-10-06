@@ -13,7 +13,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
     }
 
     async create_datos_generales(params: CreateDatosGenerales.Params): Promise<CreateDatosGenerales.Result> {
-        console.log("params => " + JSON.stringify(params))
+        
         const id = (await this.db.insertOne({...params,fecha: new Date(params.fecha)})).insertedId
         return id.toHexString()
     }
@@ -222,6 +222,12 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             localField: 'id_sustancias_ilegales',
             as:'SustanciasIlegales'
         })
+        .lookup({
+            from: 'ApoyoTecnico_Dinero',
+            foreignField:'_id',
+            localField:'id_dinero',
+            as:'Dinero_ApoyoTecnico'
+        })
         .group({
             _id:{
                 '_id':'$_id',
@@ -238,13 +244,25 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                         }
                     }
                 },
-                'sustancias_ilegales':'$SustanciasIlegales'
+                'total_dinero':{
+                    '$map':{
+                        'input':'$Dinero_ApoyoTecnico',
+                        'as':'dinero_int',
+                        'in':{
+                            '_id':'$$dinero_int._id',
+                            'valor_total':{'$toInt':'$$dinero_int.valor_total'}
+                        }
+                    }
+                },
+                'sustancias_ilegales':'$SustanciasIlegales',
+                // 'total_dinero':'$Dinero_ApoyoTecnico'
             }
         })
         .group({
             '_id':'$_id._id',
             'total_municiones':{'$first':{'$sum':'$_id.municiones_transform.cantidad'}},
             'total_sustancias_ilegales':{'$first':{'$sum':'$_id.sustancias_ilegales.peso_kg'}},
+            'total_dinero':{'$first':{'$sum':'$_id.total_dinero.valor_total'}},
             'total_detenidos':{'$first':'$_id.id_detenidos'},
             'total_armas':{'$first':'$_id.id_armas'},
             'total_vehiculos':{'$first':'$_id.id_vehiculos'},
@@ -253,6 +271,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             '_id':'$_id',
             'total_municiones':{'$sum':'$total_municiones'},
             'total_sustancias_ilegales':{'$sum':'$total_sustancias_ilegales'},
+            'total_dinero':{'$sum':'$total_dinero'},
             "total_detenidos":{
                 '$cond':{
                     if:{'$isArray':'$total_detenidos'},
@@ -281,7 +300,8 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             'total_sustancias_ilegales':{'$sum':'$total_sustancias_ilegales'},
             'total_detenidos':{'$sum':'$total_detenidos'},
             'total_armas':{'$sum':'$total_armas'},
-            'total_vehiculos':{'$sum':'$total_vehiculos'}
+            'total_vehiculos':{'$sum':'$total_vehiculos'},
+            'total_dinero':{'$sum':'$total_dinero'}
         })
         .build()
 
