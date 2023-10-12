@@ -105,6 +105,12 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                 localField: 'id_municiones',
                 as:'Municiones'
             })
+            .lookup({
+                from:'ApoyoTecnico_Dinero',
+                foreignField:'_id',
+                localField:'id_dinero',
+                as:'Dinero'
+            })
             .group({
                 "_id":{
                     "_id":"$_id",
@@ -128,6 +134,18 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     "name_image":'$image_anexo',
                     "municiones": '$Municiones',
                     'fecha':'$fecha',
+                    'dinero_transform':{
+                        '$map':{
+                            'input':'$Dinero',
+                            'as':'dinero_int',
+                            'in':{
+                                '_id':'$$dinero_int._id',
+                                'cantidad':{
+                                    '$toInt':'$$dinero_int.valor_total'
+                                }
+                            }
+                        }
+                    },
                     'municiones_transform':{
                         '$map':{
                             'input':'$Municiones',
@@ -177,22 +195,20 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                         }
                     },
                     'SustanciasIlegales':'$_id.SustanciasIlegales',
-                    'Dinero':{
-                        '$cond':{
-                            if: {'$isArray':'$_id.id_dinero'},
-                            then:{'$size':'$_id.id_dinero'},
-                            else:0
-                        }
-                    },
+                    
                     'municiones':{
                         '$sum':'$_id.municiones_transform.cantidad'
                     },
+                    'dinero':{
+                        '$sum':'$_id.dinero_transform.cantidad'
+                    }
                 },
                   
             })
             .build()
             const reporte_by_id = await this.db.aggregate<GetReporteApoyoTecnicoById.Result>(query).toArray()
             const data = MongoHelper.mapCollection(reporte_by_id)
+            
             return data.length > 0 ? data[0] : null
         } catch (error) {
             console.log(error)
