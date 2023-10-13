@@ -141,7 +141,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                             'in':{
                                 '_id':'$$dinero_int._id',
                                 'cantidad':{
-                                    '$toInt':'$$dinero_int.valor_total'
+                                    '$toDouble':'$$dinero_int.valor_total'
                                 }
                             }
                         }
