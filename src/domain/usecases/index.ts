@@ -7,8 +7,10 @@ export * from './check-survey-by-id'
 export * from './load-surveys'
 export * from './load-survey-result'
 export * from './save-survey-result'
+
 // Solicitud
 export * from './solicitudes'
+
 
 export * from './add-solicitud'
 export * from './load-solicitudes'
@@ -16,6 +18,7 @@ export * from './load-by-id-solicitud'
 export * from './check-solicitud-by-id'
 export * from './load-solicitud-result'
 export * from './add-many-solicitud'
+
 
 // Solicitud Test 
 export * from './solicitudes_test'

@@ -9,6 +9,7 @@ export namespace LoadSolicitudByIp {
         ip:string;
         accountId:string;
     }
+    
     export type Result = {
         solicitudes:SolicitudResult[],
         n_documents:number
