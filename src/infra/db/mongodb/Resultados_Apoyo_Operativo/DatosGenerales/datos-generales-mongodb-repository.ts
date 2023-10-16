@@ -111,6 +111,12 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                 localField:'id_dinero',
                 as:'Dinero'
             })
+            .lookup({
+                from:'ApoyoTecnico_TerminalesMoviles',
+                foreignField:'_id',
+                localField:'id_terminales_moviles',
+                as:'TerminalesMoviles' 
+            })
             .group({
                 "_id":{
                     "_id":"$_id",
@@ -153,6 +159,18 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                             'in':{
                                 '_id':'$$municiones_int._id',
                                 'cantidad':{'$toInt':'$$municiones_int.cantidad'}
+                            }
+                        }
+                    },
+                    'terminales_moviles':{
+                        '$map':{
+                            'input':'$TerminalesMoviles',
+                            'as':'terminales_moviles_int',
+                            'in':{
+                                '_id':'$$terminales_moviles_int._id',
+                                'cantidad':{
+                                    '$toInt':'$$terminales_moviles_int.cantidad'
+                                }
                             }
                         }
                     },
@@ -201,6 +219,9 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     },
                     'dinero':{
                         '$sum':'$_id.dinero_transform.cantidad'
+                    },
+                    'celulares':{
+                        '$sum':'$_id.terminales_moviles.cantidad'
                     }
                 },
                   
