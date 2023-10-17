@@ -355,7 +355,6 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
         }
         
         } catch (error) {
-            console.log('Aqui esta el error ')
             console.log(error)    
         }
     }   
