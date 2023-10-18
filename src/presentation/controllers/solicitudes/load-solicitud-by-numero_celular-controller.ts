@@ -12,22 +12,25 @@ export class LoadSolicitudByNumeroCelularController implements Controller {
         try {
             const {numeroCelular} = request
             const solicitud = await this.loadSolicitudByNumeroCeluar.load_solicitud_by_numero_celular({numero_celular:numeroCelular})
-            const solicitante = await this.loadSolicitanteById.load_solicitante_by_id({id_solicitante: solicitud.solicitud.solicitante})
-            const data_ = {
-                Solicitud:{
-                    caso: solicitud.solicitud.caso,
-                    delito: solicitud.solicitud.delito,
-                    organizacion: solicitud.solicitud.organizacion_delicuencial,
-                    investigacion_previa: solicitud.solicitud.investigacion_previa,
-                },
-                Analista:{
-                    grado: solicitante.grado,
-                    nombre_completos: solicitante.nombres_completos,
-                    unidad: solicitante.unidad,
-                    zona: solicitante.zona
+            if(solicitud){
+                const solicitante = await this.loadSolicitanteById.load_solicitante_by_id({id_solicitante: solicitud.solicitud.solicitante})
+                const data_ = {
+                    Solicitud:{
+                        caso: solicitud.solicitud.caso,
+                        delito: solicitud.solicitud.delito,
+                        organizacion: solicitud.solicitud.organizacion_delicuencial,
+                        investigacion_previa: solicitud.solicitud.investigacion_previa,
+                    },
+                    Analista:{
+                        grado: solicitante.grado,
+                        nombre_completos: solicitante.nombres_completos,
+                        unidad: solicitante.unidad,
+                        zona: solicitante.zona
+                    }
                 }
+                return solicitud ? ok(data_) : noContent()
             }
-            return solicitud ? ok(data_) : noContent()
+            return noContent()
         } catch (error) {
             serverError(error)
         }   

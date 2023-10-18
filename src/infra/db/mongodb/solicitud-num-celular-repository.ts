@@ -42,7 +42,6 @@ export class NumeroCelularMongoRepository implements LoadNumCelularRepositoryI,L
         .build()
         const docs_ = await numeroCelularCollection.aggregate<LoadSolicitudByNumeroCelularRepository.Result>(query).toArray()
         const docs_array =  MongoHelper.mapCollection(docs_)
-        
         return docs_array.length > 0 ? docs_array.length > 1 ? docs_array[docs_array.length - 1 ] : docs_array[0] : null 
     }
 }   
