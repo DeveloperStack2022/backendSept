@@ -27,4 +27,5 @@ export type DataResultadosTotales = {
     total_sustancia_ilegales:number; //Total Kg
     total_vehiculos:number;
     total_municiones:number;
+    total_terminales_moviles:number
 }

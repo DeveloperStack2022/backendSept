@@ -1,0 +1,1 @@
+export * from './load-solicitante-by-id-repository'

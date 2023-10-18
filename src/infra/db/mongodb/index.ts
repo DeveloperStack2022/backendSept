@@ -19,3 +19,5 @@ export * from './Resultados_Apoyo_Operativo'
 
 // PRAE
 export * from './prae-mongo-repository'
+
+export * from './solicitante-mongo-repository'

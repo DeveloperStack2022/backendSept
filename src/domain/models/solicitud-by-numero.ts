@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export type SolicitudNumero = {
    numero_celular:string;
    solicitud:SolicitudM;
@@ -9,6 +11,7 @@ type SolicitudM = {
    delito:string;
    organizacion_delicuencial:string;
    investigacion_previa:string;
+   solicitante:ObjectId
 }
 
 type SolicitanteM = {

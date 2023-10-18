@@ -238,7 +238,6 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
     }
 
     async get_results_by_range_date(params: GetResultsByRangeDate.Params): Promise<GetResultsByRangeDate.Result> {
-        console.log({start_date:params.date_start,end_date:params.date_end })
         try {
             const query = new QueryBuilder()
         .match({
@@ -265,12 +264,29 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             localField:'id_dinero',
             as:'Dinero_ApoyoTecnico'
         })
+        .lookup({
+            from:'ApoyoTecnico_TerminalesMoviles',
+            foreignField:'_id',
+            localField:'id_terminales_moviles',
+            as:'TerminalesMoviles'
+        })
         .group({
             _id:{
                 '_id':'$_id',
                 'id_detenidos':'$id_detenidos',
                 'id_armas':'$id_armas',
                 'id_vehiculos':'$id_vehiculos',
+
+                'terminales_moviles_transform':{
+                    '$map':{
+                        'input':'$TerminalesMoviles',
+                        'as':'terminales_moviles_int',
+                        'in':{
+                            '_id':'$$terminales_moviles_int._id',
+                            'cantidad':{'$toInt':'$$terminales_moviles_int.cantidad'}
+                        }
+                    }
+                },
                 'municiones_transform':{
                     '$map':{
                         'input':'$Municiones',
@@ -303,10 +319,12 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             'total_detenidos':{'$first':'$_id.id_detenidos'},
             'total_armas':{'$first':'$_id.id_armas'},
             'total_vehiculos':{'$first':'$_id.id_vehiculos'},
+            'total_terminales_moviles':{'$first':'$_id.terminales_moviles_transform.cantidad'}
         })
         .project({
             '_id':'$_id',
             'total_municiones':{'$sum':'$total_municiones'},
+            'total_terminales_moviles':{'$sum':'$total_terminales_moviles'},
             'total_sustancias_ilegales':{'$sum':'$total_sustancias_ilegales'},
             'total_dinero':{'$sum':'$total_dinero'},
             "total_detenidos":{
@@ -330,6 +348,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     else: 0
                 }
             },
+            
         })
         .group({
             '_id':null,
@@ -338,7 +357,8 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             'total_detenidos':{'$sum':'$total_detenidos'},
             'total_armas':{'$sum':'$total_armas'},
             'total_vehiculos':{'$sum':'$total_vehiculos'},
-            'total_dinero':{'$sum':'$total_dinero'}
+            'total_dinero':{'$sum':'$total_dinero'},
+            'total_terminales_moviles':{'$sum':'$total_terminales_moviles'}
         })
         .build()
 
@@ -351,7 +371,8 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
             total_dinero:0,
             total_sustancia_ilegales:0,
             total_municiones:0,
-            total_vehiculos:0
+            total_vehiculos:0,
+            total_terminales_moviles:0
         }
         
         } catch (error) {

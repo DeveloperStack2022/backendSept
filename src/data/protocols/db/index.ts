@@ -15,3 +15,6 @@ export * from './Registro_Analista'
 export * from './Resultados_Apoyo_Operativo'
 // Registro Prae 
 export * from './Prae'
+
+// Solicitante 
+export * from './solicitante'
