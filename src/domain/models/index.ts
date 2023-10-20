@@ -19,3 +19,5 @@ export * from './Resultados'
 
 // Registro Pedidos PRAE
 export * from './Prae'
+
+export * from './RegistroEcu'

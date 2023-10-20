@@ -11,6 +11,8 @@ type SolicitudM = {
    delito:string;
    organizacion_delicuencial:string;
    investigacion_previa:string;
+   nombre_fiscal:string;
+   nombre_fiscalia:string;
    solicitante:ObjectId
 }
 

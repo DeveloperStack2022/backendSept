@@ -27,3 +27,4 @@ export * from './Registro_Analistas'
 export * from './Resultado_Apoyo_Tecnico'
 
 export * from './Prae'
+export * from './registroEcu'

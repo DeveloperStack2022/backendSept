@@ -14,7 +14,18 @@ export class DineroMongoRepository implements CreateDinero {
     }
 
     async create_dinero(params: CreateDinero.Params): Promise<CreateDinero.Result> {
-        const data_id = (await this.db.insertMany(params)).insertedIds
+        const valor_transform = this.convertNumberInStringToInt(params)
+        const data_id = (await this.db.insertMany(valor_transform)).insertedIds
         return Object.values(data_id).map(value => value.toHexString())
+    }
+
+    private convertNumberInStringToInt(data: CreateDinero.Params){
+        return data.map(item => {
+            return {
+                tipo_divisa: item.tipo_divisa,
+                valor_total: item.valor_total,
+                valor_total_int: parseInt(item.valor_total)
+            }
+        })
     }
 }

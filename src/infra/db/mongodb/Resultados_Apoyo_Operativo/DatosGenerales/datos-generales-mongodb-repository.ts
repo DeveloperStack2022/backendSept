@@ -140,18 +140,18 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     "name_image":'$image_anexo',
                     "municiones": '$Municiones',
                     'fecha':'$fecha',
-                    'dinero_transform':{
-                        '$map':{
-                            'input':'$Dinero',
-                            'as':'dinero_int',
-                            'in':{
-                                '_id':'$$dinero_int._id',
-                                'cantidad':{
-                                    '$toDouble':'$$dinero_int.valor_total'
-                                }
-                            }
-                        }
-                    },
+                    // 'dinero_transform':{
+                    //     '$map':{
+                    //         'input':'$Dinero',
+                    //         'as':'dinero_int',
+                    //         'in':{
+                    //             '_id':'$$dinero_int._id',
+                    //             'cantidad':{
+                    //                 '$toDouble':'$$dinero_int.valor_total'
+                    //             }
+                    //         }
+                    //     }
+                    // },
                     'municiones_transform':{
                         '$map':{
                             'input':'$Municiones',
@@ -174,6 +174,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                             }
                         }
                     },
+                    'total_dinero':'$Dinero'
                 }
             })
             .project({
@@ -217,9 +218,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'municiones':{
                         '$sum':'$_id.municiones_transform.cantidad'
                     },
-                    'dinero':{
-                        '$sum':'$_id.dinero_transform.cantidad'
-                    },
+                    'dinero':{'$sum':'$_id.total_dinero.valor_total_int'},
                     'celulares':{
                         '$sum':'$_id.terminales_moviles.cantidad'
                     }
@@ -297,25 +296,25 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                         }
                     }
                 },
-                'total_dinero':{
-                    '$map':{
-                        'input':'$Dinero_ApoyoTecnico',
-                        'as':'dinero_int',
-                        'in':{
-                            '_id':'$$dinero_int._id',
-                            'valor_total':{'$toDouble':'$$dinero_int.valor_total'}
-                        }
-                    }
-                },
+                // 'total_dinero':{
+                //     '$map':{
+                //         'input':'$Dinero_ApoyoTecnico',
+                //         'as':'dinero_int',
+                //         'in':{
+                //             '_id':'$$dinero_int._id',
+                //             'valor_total':{'$toDouble':'$$dinero_int.valor_total'}
+                //         }
+                //     }
+                // },
                 'sustancias_ilegales':'$SustanciasIlegales',
-                // 'total_dinero':'$Dinero_ApoyoTecnico'
+                'total_dinero':'$Dinero_ApoyoTecnico'
             }
         })
         .group({
             '_id':'$_id._id',
             'total_municiones':{'$first':{'$sum':'$_id.municiones_transform.cantidad'}},
             'total_sustancias_ilegales':{'$first':{'$sum':'$_id.sustancias_ilegales.peso_kg'}},
-            'total_dinero':{'$first':{'$sum':'$_id.total_dinero.valor_total'}},
+            'total_dinero':{'$first':{'$sum':'$_id.total_dinero.valor_total_int'}},
             'total_detenidos':{'$first':'$_id.id_detenidos'},
             'total_armas':{'$first':'$_id.id_armas'},
             'total_vehiculos':{'$first':'$_id.id_vehiculos'},

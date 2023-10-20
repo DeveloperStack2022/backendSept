@@ -18,3 +18,6 @@ export * from './Prae'
 
 // Solicitante 
 export * from './solicitante'
+
+// Registro Ecu 
+export * from './Registro_Ecu'

@@ -20,6 +20,8 @@ export class LoadSolicitudByNumeroCelularController implements Controller {
                         delito: solicitud.solicitud.delito,
                         organizacion: solicitud.solicitud.organizacion_delicuencial,
                         investigacion_previa: solicitud.solicitud.investigacion_previa,
+                        nombre_fiscalia:solicitud.solicitud.nombre_fiscalia,
+                        nombre_fiscal: solicitud.solicitud.nombre_fiscal
                     },
                     Analista:{
                         grado: solicitante.grado,

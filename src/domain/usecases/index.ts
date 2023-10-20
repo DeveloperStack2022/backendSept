@@ -33,3 +33,6 @@ export * from './Resultados_Apoyo_Operativo'
 
 // Registro Prae 
 export * from './Prae'
+
+// Registro ECU
+export * from './Ecu'

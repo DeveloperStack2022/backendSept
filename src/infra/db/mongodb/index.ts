@@ -21,3 +21,5 @@ export * from './Resultados_Apoyo_Operativo'
 export * from './prae-mongo-repository'
 
 export * from './solicitante-mongo-repository'
+
+export * from './Ecu-mongo-repository'
