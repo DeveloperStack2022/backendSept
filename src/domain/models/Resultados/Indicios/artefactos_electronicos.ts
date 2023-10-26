@@ -3,7 +3,6 @@ export type EquipoElectronico = {
     cantidad:number
     marca:string;
     modelo:string;
-    serie:string;
     imei:string;
-    numero_cel:string;
+    numero_cel?:string;
 }

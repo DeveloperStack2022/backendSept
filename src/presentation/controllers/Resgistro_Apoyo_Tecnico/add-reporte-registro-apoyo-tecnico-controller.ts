@@ -1,8 +1,9 @@
 import { Controller, HttpResponse } from "@/presentation/protocols";
 import {serverError,ok} from '@/presentation/helpers'
 
-import {DatosGenerales,ResumenCaso,Detenidos,Arma, Vehiculo, Dinero,SustanciasIlegales} from '@/domain/models'
+import {DatosGenerales,ResumenCaso,Detenidos,Arma, Vehiculo, Dinero,SustanciasIlegales,EquipoElectronico} from '@/domain/models'
 import {CreateDatosGenerales,CreateResumenCaso,CreateDetenido,CreateArmas,CreateVehiculos, CreateDinero,CreateSustanciasIlegales,UpdateDatosGenerales,CreateMuniciones} from '@/domain/usecases'
+import {CreateTerminalesMoviles} from '@/domain/usecases'
 
 export class AddReporteRegistroApoyoTecnico implements Controller {
     constructor(
@@ -14,7 +15,8 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
         private readonly addDinero: CreateDinero,
         private readonly addSustanciasIlegales: CreateSustanciasIlegales,
         private readonly updateRegistroApoyoTecnico:UpdateDatosGenerales,
-        private readonly addMuniciones: CreateMuniciones
+        private readonly addMuniciones: CreateMuniciones,
+        private readonly addTerminalesMoviles: CreateTerminalesMoviles
     ){}
             
     async handle(request: any): Promise<HttpResponse>  {
@@ -69,6 +71,14 @@ export class AddReporteRegistroApoyoTecnico implements Controller {
                 }
 
             }
+            if(request_data.celulares.length > 0 ) {
+                const create_terminales_moviles = await this.addTerminalesMoviles.create_terminales_moviles(request_data.celulares)
+                console.log(create_terminales_moviles)
+                ids_Docs = {
+                    ...ids_Docs,
+                    celulares: create_terminales_moviles
+                }
+            }
 
             if(request_data.sustancias_sujetas_fiscalizacion.length  > 0) {
                 // TODO: Transform Data 
@@ -113,7 +123,8 @@ export namespace AddReporteRegistroApoyoTecnico {
             armas: Arma[]
             vehiculo: Vehiculo[]
             dinero: Dinero[],
-            sustancias_sujetas_fiscalizacion: SustanciasIlegales[]
+            sustancias_sujetas_fiscalizacion: SustanciasIlegales[],
+            celulares: EquipoElectronico[]
         }
     }
     export type IDS = {
@@ -125,5 +136,6 @@ export namespace AddReporteRegistroApoyoTecnico {
         dinero?:string[]
         municiones?:string[]
         sustancias_sujetas_fiscalizacion?:string[]
+        celulares?:string[]
     }
 }
