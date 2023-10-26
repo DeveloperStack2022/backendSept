@@ -7,5 +7,5 @@ export * from './Dinero'
 export * from './SustanciasSujetasF'
 export * from './ReporteApoyoTecnico'
 export * from './Anexos'
-
 export * from './Municiones'
+export * from './TerminalesMoviles'

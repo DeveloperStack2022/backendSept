@@ -28,7 +28,8 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
                     'id_resumen_caso':new ObjectId(params.resumenCaso),
                     'id_sustancias_ilegales': params.hasOwnProperty('sustancias_sujetas_fiscalizacion') ? params.sustancias_sujetas_fiscalizacion.map(item => new ObjectId(item)) : [],
                     'id_dinero': params.hasOwnProperty('dinero') ? params.dinero.map(item => new ObjectId(item)) : [],
-                    'id_municiones':params.hasOwnProperty('municiones') ? params.municiones.map(item => new ObjectId(item)) : []
+                    'id_municiones':params.hasOwnProperty('municiones') ? params.municiones.map(item => new ObjectId(item)) : [],
+                    'id_terminales_moviles': params.hasOwnProperty('celulares') ? params.celulares.map(item => new ObjectId(item)):[]
                 }      
             })
             return true
@@ -75,6 +76,7 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
         } catch (error) {
             console.log('Aqui esta el Error')
             console.log(error)
+            return null
         }
     }
 
@@ -375,7 +377,8 @@ export class DatosGeneralesMongoRepository implements CreateDatosGenerales,Updat
         }
         
         } catch (error) {
-            console.log(error)    
+            console.log(error)
+            return null    
         }
     }   
 }

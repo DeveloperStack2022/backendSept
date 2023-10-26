@@ -27,4 +27,5 @@ export type UpdateDatosGeneralesEntity = {
     dinero?:string[]
     municiones?:string[]
     sustancias_sujetas_fiscalizacion?:string[]
+    celulares?:string[]
 }
