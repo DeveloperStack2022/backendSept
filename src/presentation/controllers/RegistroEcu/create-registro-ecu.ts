@@ -1,7 +1,8 @@
 import { Controller, HttpResponse } from "@/presentation/protocols";
 import {CreateRegistroEcu} from '@/domain/usecases'
 import { serverError,ok,noContent } from "@/presentation/helpers";
-import {Terminal,RadioBase} from '@/domain/models'
+import {Terminal,RadioBase,Analista,Solicitud} from '@/domain/models'
+
 
 
 export class CreateRegistroEcuPresentationController implements Controller {
@@ -26,6 +27,8 @@ export class CreateRegistroEcuPresentationController implements Controller {
 
 export namespace CreateRegistroEcuPresentationController { 
     export type Request = {
+        Agente: Analista,
+        Solicitud:Solicitud,
         Terminal:Terminal,
         RadioBase?:RadioBase
     }

@@ -21,3 +21,4 @@ export * from './Resultados'
 export * from './Prae'
 
 export * from './RegistroEcu'
+export * from './Solicitud-model'

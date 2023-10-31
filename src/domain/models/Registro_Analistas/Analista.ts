@@ -4,5 +4,5 @@ export type Analista = {
     nombres_completos:string;
     grado:string;
     ID_UNIDAD:string;
-    ID_ZONA:string;
+    ID_ZONA?:string;
 }
